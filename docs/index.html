@@ -99,31 +99,34 @@
         
         <!-- Empty State Container -->
         <div class="empty-state-box" id="dsEmptyBox">
-          <p class="empty-text">No dataset loaded yet. Choose your local Kaggle data folder to inspect channels, subjects, and sampling rate.</p>
+          <p class="empty-text">No dataset loaded yet. Choose your local Kaggle data folder to inspect text specifications, channels, subjects, and sampling rate (0 API tokens).</p>
           <div class="folder-select-row">
-            <input type="text" id="localFolderInput" class="folder-input" value="omnibci/data/kaggle_dataset" placeholder="Enter path to dataset folder..." />
+            <input type="text" id="localFolderInput" class="folder-input" value="C:\Users\delor\Documents\Codex\Projects\EEG Interwined\Kaggle" placeholder="Enter path to dataset folder..." />
             <button class="btn btn-sm btn-primary" id="scanFolderBtn">📁 Select Local Folder</button>
           </div>
         </div>
 
         <!-- Populated State Container (Hidden initially) -->
         <div class="dataset-meta" id="dsLoadedMeta" style="display: none;">
-          <div class="meta-row"><strong>Dataset:</strong> <span id="dsName">UK BCI Consortium</span></div>
-          <div class="meta-row"><strong>Subjects:</strong> <span id="dsSubjects">17 Adult Volunteers (14 Train, 3 Test)</span></div>
-          <div class="meta-row"><strong>Channels:</strong> <span id="dsChannels">8 Electrodes (F3, F4, C3, Cz, C4, P3, P4, Oz) at 250 Hz</span></div>
-          <div class="meta-row"><strong>Total Trials:</strong> <span id="dsTrials">680 Epochs (4.0s duration)</span></div>
+          <div class="meta-row"><strong>Dataset:</strong> <span id="dsName">UK BCI Consortium: Cross Subject</span></div>
+          <div class="meta-row"><strong>Subjects:</strong> <span id="dsSubjects">20 Participants (17 Train, 3 Test)</span></div>
+          <div class="meta-row"><strong>Channels:</strong> <span id="dsChannels">8 Electrodes (Fz, C3, Cz, C4, PO7, Pz, PO8, Oz) at 250 Hz</span></div>
+          <div class="meta-row"><strong>Total Trials:</strong> <span id="dsTrials">2,155 Trials (12,524 Sub-windows)</span></div>
           <div class="meta-row"><strong>Task:</strong> Binary Motor Intention (`rest` vs `move`)</div>
+          <div class="meta-row"><strong>Conditioning:</strong> <span id="dsFilter">50 Hz Notch, 1.0-45 Hz Butterworth, z-score</span></div>
+          <div class="meta-row"><strong>Current Baseline:</strong> <span id="dsBaseline" style="color: var(--accent-cyan); font-weight: 600;">59.00% (Rank 10 Ensemble)</span></div>
+          <div class="meta-row"><strong>Scanned Specs:</strong> <span id="dsScannedFiles" class="path-badge">dataset_info.txt, SUBMISSION_DETAILS.txt</span></div>
           <div class="meta-row folder-row">
-            <strong>Active Folder:</strong> <span class="path-badge" id="dsFolderPath">omnibci/data/kaggle_dataset</span>
+            <strong>Active Folder:</strong> <span class="path-badge" id="dsFolderPath">C:\Users\delor\Documents\Codex\Projects\EEG Interwined\Kaggle</span>
           </div>
         </div>
       </div>
 
-      <!-- 2. Synthesized Models Card (Starts EMPTY with Paper Upload Option) -->
+      <!-- 2. Synthesized Models Card (Starts EMPTY, configurable paper count) -->
       <div class="side-card models-card">
         <div class="side-card-header">
-          <h3>📑 Synthesized Models (Limit: 3)</h3>
-          <span class="p2a-badge" id="modelsCountBadge">0 / 3 Active</span>
+          <h3>📑 Synthesized Models</h3>
+          <span class="p2a-badge" id="modelsCountBadge">0 Active Models</span>
         </div>
 
         <!-- Empty State Container -->
@@ -138,6 +141,12 @@
         <!-- Populated Papers List (Hidden initially) -->
         <div class="papers-list" id="papersList" style="display: none;">
           <!-- Populated dynamically by app.js -->
+        </div>
+
+        <!-- Models Action Footer (Visible when papers are active) -->
+        <div class="models-footer-bar" id="modelsFooterBar" style="display: none; margin-top: 0.65rem; display: flex; gap: 0.5rem;">
+          <button class="btn btn-sm btn-outline" id="addMorePaperBtn">+ Add Another Paper</button>
+          <button class="btn btn-sm btn-outline" id="resetDefaultModelsBtn">Reset Default 3</button>
         </div>
       </div>
 

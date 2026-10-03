@@ -414,6 +414,37 @@ body {
   gap: 0.5rem;
 }
 
+.card-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.2rem;
+  transition: color 0.15s;
+}
+
+.card-delete-btn:hover {
+  color: #ef4444;
+}
+
+.models-footer-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.models-footer-bar .btn {
+  flex: 1;
+}
+
 .paper-title {
   font-size: 0.85rem;
   font-weight: 600;
