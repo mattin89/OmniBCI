@@ -7,6 +7,12 @@ import os
 import re
 import urllib.request
 import json
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Automatically load from local .env and ~/.env
+load_dotenv()
+load_dotenv(Path.home() / ".env")
 
 def generate_voiceover(
     script_path: str = "omnibci/submission/demo_script_2min.md",
