@@ -1,7 +1,8 @@
-# OmniBCI: Autonomous AI Co-Scientist for Wearable EEG Motor Intention Decoding
+# OmniBCI: AI Co-Pilot for Neuroscience Dataset and ML/DL Discovery and Deployment
 
-[![Hack-Nation Challenge 03](https://img.shields.io/badge/Hack--Nation-Challenge%2003%20Motor%20Intention%20Decoding-blue.svg)](https://hack-nation.com)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen.svg)](https://mattin89.github.io/OmniBCI/)
+[![Hack-Nation Challenge 03](https://img.shields.io/badge/Hack--Nation-Challenge%2003%20Agentic%20Discovery-blue.svg)](https://hack-nation.com)
+[![Render Live App](https://img.shields.io/badge/Render-Live%20App%20(Active)-46E3B7.svg?logo=render&logoColor=white)](https://omnibci.onrender.com)
+[![GitHub Pages Demo](https://img.shields.io/badge/GitHub%20Pages-Live%20Demo-brightgreen.svg)](https://mattin89.github.io/OmniBCI/)
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/mattin89/OmniBCI)
 [![Kaggle Benchmark](https://img.shields.io/badge/Kaggle-UK%20BCI%20Consortium%20(17%20Subjects)-20BEFF.svg)](https://www.kaggle.com/competitions/low-cost-motor-imagery-decoding-for-rehab-cross-subject)
 [![ScaDS.AI Llama-3.3-70B](https://img.shields.io/badge/ScaDS.AI-Llama--3.3--70B%20Inference-green.svg)](https://scads.ai)
@@ -249,6 +250,9 @@ Open your browser at `http://127.0.0.1:8000`.
 5. Click **Run Benchmark Locally** to inspect the 17-subject leaderboard, view comparative charts, and follow the streaming execution in the embedded JupyterLab panel below.
 
 ### Cloud Deployment on Render
+
+> [!TIP]
+> **Live Production Deployment**: OmniBCI is deployed and live on Render at **[https://omnibci.onrender.com](https://omnibci.onrender.com)**.
 
 This repository includes a `render.yaml` blueprint specification and a containerized `Dockerfile`.
 
