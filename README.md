@@ -210,70 +210,8 @@ This repository contains all official competition artifacts for Hack-Nation Chal
 
 ---
 
-## 8. Quickstart & Local Installation
 
-You can run OmniBCI locally without spending API tokens. The application includes cached demonstration pipelines and pre-computed 17-subject benchmark evaluations.
-
-### Prerequisites
-* Python 3.10 or higher
-* Recommended: [`uv`](https://github.com/astral-sh/uv) for fast package resolution
-
-### Installation
-
-```bash
-# 1. Clone repository
-git clone https://github.com/mattin89/OmniBCI.git
-cd OmniBCI
-
-# 2. Create virtual environment and install dependencies
-uv venv
-.venv\Scripts\activate   # On Windows
-# source .venv/bin/activate # On Linux/macOS
-
-uv pip install -r requirements.txt
-```
-
-### Running the Web Application
-
-```bash
-# Launch the OmniBCI Co-Scientist server
-python omnibci/webapp/app.py
-```
-Open your browser at `http://127.0.0.1:8000`.
-
-### Replicating the Demo Flow:
-1. Click **Select Local Folder** on the right panel to scan the Kaggle dataset parameters (0 tokens consumed).
-2. Click **Import arXiv** and load preprint `https://arxiv.org/abs/2208.08860`.
-3. Click the suggestion chip: *"Analyze Intertwined Model for Kaggle"*.
-4. Watch the pipeline discover the two transfer learning papers, update the model catalog, and display verbatim citations.
-5. Click **Run Benchmark Locally** to inspect the 17-subject leaderboard, view comparative charts, and follow the streaming execution in the embedded JupyterLab panel below.
-
-### Cloud Deployment on Render
-
-This repository includes a `render.yaml` blueprint specification and a containerized `Dockerfile`.
-
-#### Method A: 1-Click Blueprint
-1. Click the **Deploy to Render** badge at the top of this repository (or navigate to `https://render.com/deploy?repo=https://github.com/mattin89/OmniBCI`).
-2. Connect your GitHub account. Render automatically reads `render.yaml`.
-3. Input your private API keys (`SCADSAI_API_KEY`, `ANTHROPIC_API_KEY`). Render stores them in its encrypted vault; they are never exposed to clients or written to Git.
-4. Click **Apply**. Render installs dependencies from `requirements.txt` and publishes your live URL (`https://omnibci.onrender.com`).
-
-#### Method B: Manual Setup
-1. In the Render Dashboard, select **New +** $\rightarrow$ **Web Service**.
-2. Connect repository `mattin89/OmniBCI`.
-3. Set the following build and start parameters:
-   * **Runtime**: `Python`
-   * **Build Command**: `pip install -r requirements.txt`
-   * **Start Command**: `uvicorn omnibci.webapp.app:app --host 0.0.0.0 --port $PORT`
-4. Under **Environment Variables**, add:
-   * `PYTHON_VERSION`: `3.11.9`
-   * `SCADSAI_API_KEY`: *(Your private ScaDS.AI key)*
-   * `ANTHROPIC_API_KEY`: *(Optional Claude key)*
-5. Click **Deploy Web Service**.
-
----
-
-## 9. License & Acknowledgments
+## 8. License & Acknowledgments
 
 This project is licensed under the Apache 2.0 License. Developed for **Hack-Nation Challenge 03: Motor Intention Decoding on Wearable EEG (Agentic Scientific Discovery)**.
 
