@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080c14" />
+      <stop offset="50%" stop-color="#0e1726" />
+      <stop offset="100%" stop-color="#060911" />
+    </linearGradient>
+
+    <!-- Accent Gradient Cyan-Blue -->
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff" />
+      <stop offset="100%" stop-color="#2979ff" />
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="360" rx="16" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="2" />
+
+  <!-- Background Decorative Grid Lines -->
+  <g opacity="0.08" stroke="#00e5ff" stroke-width="1">
+    <line x1="80" y1="0" x2="80" y2="360" />
+    <line x1="200" y1="0" x2="200" y2="360" />
+    <line x1="320" y1="0" x2="320" y2="360" />
+    <line x1="440" y1="0" x2="440" y2="360" />
+    <line x1="560" y1="0" x2="560" y2="360" />
+    <line x1="680" y1="0" x2="680" y2="360" />
+    <line x1="800" y1="0" x2="800" y2="360" />
+    <line x1="920" y1="0" x2="920" y2="360" />
+    <line x1="1040" y1="0" x2="1040" y2="360" />
+    <line x1="1160" y1="0" x2="1160" y2="360" />
+    <line x1="0" y1="60" x2="1200" y2="60" />
+    <line x1="0" y1="120" x2="1200" y2="120" />
+    <line x1="0" y1="180" x2="1200" y2="180" />
+    <line x1="0" y1="240" x2="1200" y2="240" />
+    <line x1="0" y1="300" x2="1200" y2="300" />
+  </g>
+
+  <!-- Stylized EEG Waveform across banner -->
+  <path d="M 0 180 Q 75 140, 150 180 T 300 180 T 450 160 T 525 240 T 560 70 T 600 270 T 640 130 T 700 180 T 850 180 T 1000 190 T 1100 170 T 1200 180" 
+        fill="none" stroke="url(#primaryGrad)" stroke-width="2.5" opacity="0.35" />
+  <path d="M 0 180 Q 90 200, 180 180 T 360 170 T 520 180 T 560 90 T 600 250 T 630 150 T 720 180 T 900 180 T 1050 175 T 1200 180" 
+        fill="none" stroke="#2979ff" stroke-width="1.5" opacity="0.2" />
+
+  <!-- Hack-Nation Top Pill Badge -->
+  <g transform="translate(60, 38)">
+    <rect width="470" height="30" rx="15" fill="#1e293b" fill-opacity="0.8" stroke="#334155" stroke-width="1" />
+    <circle cx="16" cy="15" r="5" fill="#00e5ff" filter="url(#subtleGlow)" />
+    <text x="30" y="20" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" letter-spacing="0.5">
+      HACK-NATION CHALLENGE 03 · 10× FASTER SCIENTIFIC DISCOVERY
+    </text>
+  </g>
+
+  <!-- Left Logo Emblem Box -->
+  <g transform="translate(60, 95)">
+    <rect width="110" height="110" rx="22" fill="#0b1322" stroke="url(#primaryGrad)" stroke-width="2" filter="url(#subtleGlow)" />
+    <rect x="8" y="8" width="94" height="94" rx="16" fill="url(#primaryGrad)" />
+    <text x="55" y="77" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="68" font-weight="900" text-anchor="middle">Ψ</text>
+  </g>
+
+  <!-- Main Title & Tagline -->
+  <g transform="translate(195, 132)">
+    <text x="0" y="0" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Helvetica, Arial, sans-serif" font-size="46" font-weight="800" letter-spacing="-1">
+      OmniBCI <tspan fill="url(#primaryGrad)">Co-Pilot</tspan>
+    </text>
+    <text x="0" y="38" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Helvetica, Arial, sans-serif" font-size="18" font-weight="400">
+      Autonomous AI Co-Scientist for Wearable EEG Motor Intention Decoding
+    </text>
+    <text x="0" y="66" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Helvetica, Arial, sans-serif" font-size="14" font-weight="500">
+      Zero-Code Scientific Discovery · Databricks Omnigent · ScaDS.AI Llama-3.3-70B · Paper2Agent Synthesis
+    </text>
+  </g>
+
+  <!-- Feature Capability Pills Bottom Row -->
+  <g transform="translate(60, 280)">
+    <g transform="translate(0, 0)">
+      <rect width="245" height="38" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1.5" />
+      <text x="18" y="24" fill="#00e5ff" font-family="sans-serif" font-size="14">⚡</text>
+      <text x="40" y="24" fill="#e2e8f0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600">Minutes, Not Months</text>
+      <text x="175" y="24" fill="#64748b" font-family="sans-serif" font-size="12">40× Faster</text>
+    </g>
+
+    <g transform="translate(260, 0)">
+      <rect width="250" height="38" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1.5" />
+      <text x="18" y="24" fill="#38bdf8" font-family="sans-serif" font-size="14">📚</text>
+      <text x="40" y="24" fill="#e2e8f0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600">Paper2Agent Pipeline</text>
+      <text x="185" y="24" fill="#64748b" font-family="sans-serif" font-size="12">MCP Tools</text>
+    </g>
+
+    <g transform="translate(525, 0)">
+      <rect width="275" height="38" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1.5" />
+      <text x="18" y="24" fill="#4ade80" font-family="sans-serif" font-size="14">🏆</text>
+      <text x="40" y="24" fill="#e2e8f0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600">96.91% Riemannian EA-TS</text>
+      <text x="215" y="24" fill="#4ade80" font-family="sans-serif" font-size="12">17 Folds</text>
+    </g>
+
+    <g transform="translate(815, 0)">
+      <rect width="265" height="38" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1.5" />
+      <text x="18" y="24" fill="#f59e0b" font-family="sans-serif" font-size="14">💬</text>
+      <text x="40" y="24" fill="#e2e8f0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600">Conversational Co-Pilot</text>
+      <text x="195" y="24" fill="#64748b" font-family="sans-serif" font-size="12">Zero-Code</text>
+    </g>
+  </g>
+</svg>

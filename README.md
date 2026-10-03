@@ -12,17 +12,38 @@
 
 ---
 
+<p align="center">
+  <img src="docs/banner.svg" alt="OmniBCI Co-Pilot Banner" width="100%" />
+</p>
+
 ## 1. Problem Statement & Clinical Context
 
-Stroke rehabilitation systems use Brain-Computer Interfaces (BCIs) to detect motor intent from scalp electroencephalography (EEG) and trigger assistive orthoses. When a patient attempts to move a paralyzed limb, sensorimotor rhythms desynchronize over the motor cortex. Decoding this transition—distinguishing motor execution from rest—enables closed-loop neurorehabilitation.
+### The Hack-Nation Challenge 03 Mission
+This project was developed for **Hack-Nation's 7th Global AI Hackathon** (organized in collaboration with the **MIT Club of Northern California** and the **MIT Club of Germany**). Challenge 03—*Agentic Scientific Discovery: 10× Faster Scientific Discovery*, powered by **Databricks Omnigent**—tasks builders with constructing an autonomous AI laboratory capable of accelerating the discovery cycle:
 
-Translating these systems from research laboratories to home-use wearable devices faces two major engineering bottlenecks:
+$$\text{Question} \longrightarrow \text{Evidence} \longrightarrow \text{Hypothesis} \longrightarrow \text{Experiment} \longrightarrow \text{Result} \longrightarrow \text{Updated Decision}$$
 
-1. **Severe Sensor Scarcity**: Clinical EEG setups use 64 or 128 wet gel electrodes. Wearable headbands rely on 8 dry or low-prep electrodes (Fz, C3, Cz, C4, PO7, Pz, PO8, Oz). Low channel density degrades spatial resolution and amplifies muscular artifacts.
-2. **Inter-Subject Domain Shift**: Differences in head geometry, skull thickness, and electrode placement produce distinct signal distributions across individuals. A deep neural network trained on one cohort drops to near-chance performance when deployed on a new participant without subject-specific calibration.
-3. **Clinical Safety Ceilings**: In rehabilitation robotics, false activations during patient rest risk joint hyperextension or physical injury. The clinical false positive rate (FPR) during resting states must remain below 10.0%.
+In conventional computational neuroscience, moving from a published paper to a verified clinical pipeline consumes weeks or months of manual engineering. Researchers must read dense mathematical formulations, locate public GitHub repositories, resolve abandoned dependencies, match sampling rates and electrode layouts, write validation code, and tune training loops for individual subjects.
 
-**OmniBCI** automates the end-to-end scientific discovery process for this domain. It discovers published peer-reviewed architectures, synthesizes them into executable Model Context Protocol (MCP) tools, benchmarks them across 17 real human participants on the UK BCI Consortium Kaggle benchmark, and diagnoses structural failure modes using a human-in-the-loop decision gate.
+**OmniBCI eliminates this friction.** By integrating Databricks Omnigent with an interactive conversational co-pilot, tasks that previously took weeks or months execute in **minutes**. 
+
+### Zero-Code Scientific Exploration
+Researchers, clinicians, and assistive device builders do not need programming expertise or deep machine learning math to discover, apply, test, and improve EEG decoding pipelines:
+* **Automated Paper & Repo Discovery**: The co-pilot retrieves peer-reviewed papers from arXiv and OpenAlex, finds the verified open-source GitHub repositories, and extracts the core architectures into standardized Model Context Protocol (MCP) tools.
+* **Local Data Scanning at Zero Cost**: The system inspects local dataset directories (`dataset_info.txt`, channel headers) without consuming API tokens, auto-harmonizing 8-electrode montages at 250 Hz.
+* **Grounded Citations**: Every mathematical adjustment and architectural recommendation cites exact verbatim excerpts from the ingested literature with section-level references and source links.
+* **Autonomous Cross-Subject Benchmarking**: The lab runs 17-fold Leave-One-Subject-Out (LOSO) cross-validation across all subjects, plots comparative charts, and streams cell-by-cell execution into an embedded JupyterLab notebook.
+* **Human-in-the-Loop Governance**: When an experimental architecture falls short of benchmark standards or exceeds clinical false positive ceilings, the agent isolates the statistical bottleneck, proposes concrete mitigations, and requests explicit human approval before running further trials.
+
+### The Clinical Frontier: Wearable EEG for Stroke Rehabilitation
+Stroke survivors frequently experience hemiparesis, losing functional control over an arm or hand. Robotic exoskeletons restore motor function by detecting movement intention from scalp electroencephalography (EEG) and physically assisting the limb. This closed-loop therapy requires decoding the transition between resting state (`rest`) and motor intention (`move`) via Event-Related Desynchronization (ERD) in sensorimotor rhythms ($\mu$: 8–12 Hz, $\beta$: 18–24 Hz).
+
+Deploying this capability onto affordable wearable headbands introduces three concrete constraints:
+1. **Severe Sensor Scarcity**: Clinical EEG employs 64 or 128 wet gel electrodes across the full scalp. In contrast, wearable headbands rely on 8 dry or low-prep electrodes (Fz, C3, Cz, C4, PO7, Pz, PO8, Oz), drastically reducing spatial resolution and magnifying volume-conduction interference.
+2. **Inter-Subject Domain Shift**: Differences in skull thickness, cortical fold geometry, and skin-electrode impedance shift signal distributions across participants. Deep neural networks trained on one subject drop from 99% calibration accuracy to near-chance levels on uncalibrated test participants.
+3. **Clinical Safety Ceilings**: A false positive during patient rest triggers involuntary robotic actuation, which can cause joint strain or physical injury. Clinical safety guidelines dictate that the false positive rate (FPR) during resting states must remain strictly below 10.0%.
+
+OmniBCI systematically tackles these constraints by evaluating geometric Riemannian covariance alignment against deep spatial-temporal representations directly on the UK BCI Consortium Kaggle benchmark.
 
 ---
 
