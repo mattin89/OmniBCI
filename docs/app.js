@@ -77,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
     appendMessage('bot', `
       👋 <strong>Welcome to OmniBCI!</strong> I am your AI Co-Pilot for EEG Motor Intention Decoding (Hack-Nation Challenge 03).
       <br/><br/>
-      • Click <strong>"Select Local Folder"</strong> on the right to scan your local Kaggle data folder (<code>dataset_info.txt</code>, <code>SUBMISSION_DETAILS.txt</code>) with zero API tokens consumed.<br/>
-      • Ask me a hypothesis or click <strong>"Search Models for Kaggle"</strong> to load candidate models. All AI responses strictly cite the active papers with verbatim source paragraphs to eliminate hallucination.
+      • Click <strong>"Select Local Folder"</strong> on the right to scan your local data folder (<code>dataset_info.txt</code>, <code>SUBMISSION_DETAILS.txt</code>) with zero API tokens consumed.<br/>
+      • Ask me a hypothesis or click <strong>"Search Models for Dataset"</strong> to load candidate models. All AI responses strictly cite the active papers with verbatim source paragraphs to eliminate hallucination.
     `);
   }
 
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
           • <strong>Cohort:</strong> ${data.dataset_info.subjects} participants (${data.dataset_info.train_trials} calibration trials, ${data.dataset_info.test_trials} evaluation trials)<br/>
           • <strong>Conditioning:</strong> ${data.dataset_info.filter_regime}<br/>
           • <strong>Current Leaderboard Baseline:</strong> <strong>${data.dataset_info.current_baseline}</strong><br/><br/>
-          Ask me questions about the competition or click <strong>"Search Models for Kaggle"</strong> on the right.
+          Ask me questions about the target dataset or click <strong>"Search Models for Dataset"</strong> on the right.
         `);
       } else {
         throw new Error('Scan failed');
@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await res.json();
         showPapers(data.papers);
         appendMessage('bot', `
-          📑 <strong>Synthesized Foundational Models for Kaggle Montage:</strong><br/>
+          📑 <strong>Synthesized Foundational Models for Cross-Subject Montage:</strong><br/>
           1. <strong>Riemannian Euclidean Alignment (EA-TS)</strong> – <a href="https://github.com/drwuHUST/TLBCI" target="_blank" rel="noopener">drwuHUST/TLBCI</a><br/>
           2. <strong>EEGNet</strong> – <a href="https://github.com/vlawhern/arl-eegmodels" target="_blank" rel="noopener">vlawhern/arl-eegmodels</a><br/>
           3. <strong>ShallowFBCSPNet</strong> – <a href="https://github.com/braindecode/braindecode" target="_blank" rel="noopener">braindecode/braindecode</a><br/><br/>
@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showPapers(getDefaultFallbackPapers());
     } finally {
       findModelsQuickBtn.disabled = false;
-      findModelsQuickBtn.textContent = '🔍 Search Models for Kaggle';
+      findModelsQuickBtn.textContent = '🔍 Search Models for Dataset';
     }
   });
 
@@ -621,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
           ✅ <strong>17-Fold Cross-Subject Benchmark Complete:</strong><br/>
           • <strong>Winning Architecture:</strong> Riemannian EA-TS with <strong>96.91% Mean Accuracy</strong> (Kappa = 0.938).<br/>
           • <strong>Clinical Safety Gate:</strong> <strong>PASSED</strong> (False Positive Rate = 1.2% &lt; 10% safety ceiling).<br/>
-          • <strong>Kaggle Submission Exported:</strong> Generated 120 test trials in <code>submission.csv</code>. Click <strong>"⬇ submission.csv"</strong> above to download.
+          • <strong>Test Submission Exported:</strong> Generated 120 test trials in <code>submission.csv</code>. Click <strong>"⬇ submission.csv"</strong> above to download.
         `);
       }
     } catch {

@@ -435,8 +435,8 @@ async def chat_copilot(req: ChatMessage):
         if len(SESSION_STATE["papers"]) == 0:
             bot_reply = (
                 "Target EEG Dataset and Synthesized Models are currently empty. "
-                "To prevent hallucinations and guarantee grounded citations, please first select your local Kaggle data folder "
-                "and click **'Search Models for Kaggle'** or upload a custom paper via Paper2Agent."
+                "To prevent hallucinations and guarantee grounded citations, please first select your local data folder "
+                "and click **'Search Models for Dataset'** or upload a custom paper via Paper2Agent."
             )
         else:
             p1 = SESSION_STATE["papers"][0]

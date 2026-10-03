@@ -38,7 +38,7 @@
       <!-- Suggested Query Chips -->
       <div class="chips-bar">
         <span class="chips-title">Suggested Inquiries:</span>
-        <button class="chip" data-query="Find suitable DL and ML models from scientific papers for the Kaggle motor imagery dataset">Find Models for Kaggle</button>
+        <button class="chip" data-query="Find suitable DL and ML models from scientific papers for the cross-subject motor imagery dataset">Find Models for Dataset</button>
         <button class="chip" data-query="How can we decode motor intention (rest vs move) on low-cost wearable EEG across unseen stroke rehab patients?">Stroke Rehab Cross-Subject</button>
         <button class="chip" data-query="How do we adapt 64-channel research models to an 8-channel low-density motor cortex montage?">8-Channel Adaptation</button>
       </div>
@@ -75,7 +75,7 @@
             <button type="button" class="icon-btn" id="arxivBtn" title="Import via arXiv ID/URL">🔗</button>
           </div>
           
-          <input type="text" id="userInput" placeholder="Ask a hypothesis or query (e.g. 'Find models for the Kaggle dataset')..." value="Find suitable DL and ML models from scientific papers for the Kaggle motor imagery dataset" />
+          <input type="text" id="userInput" placeholder="Ask a hypothesis or query (e.g. 'Find models for the motor imagery dataset')..." value="Find suitable DL and ML models from scientific papers for the cross-subject motor imagery dataset" />
           
           <button type="submit" class="btn btn-primary" id="sendBtn">Send</button>
         </form>
@@ -99,7 +99,7 @@
         
         <!-- Empty State Container -->
         <div class="empty-state-box" id="dsEmptyBox">
-          <p class="empty-text">No dataset loaded yet. Choose your local Kaggle data folder to inspect text specifications, channels, subjects, and sampling rate (0 API tokens).</p>
+          <p class="empty-text">No dataset loaded yet. Choose your local data folder to inspect text specifications, channels, subjects, and sampling rate (0 API tokens).</p>
           <div class="folder-select-row">
             <input type="text" id="localFolderInput" class="folder-input" value="C:\Users\delor\Documents\Codex\Projects\EEG Interwined\Kaggle" placeholder="Enter path to dataset folder..." />
             <button class="btn btn-sm btn-primary" id="scanFolderBtn">📁 Select Local Folder</button>
@@ -131,9 +131,9 @@
 
         <!-- Empty State Container -->
         <div class="empty-state-box" id="modelsEmptyBox">
-          <p class="empty-text">No models loaded. Ask OmniBCI in chat to find models for the Kaggle dataset, or upload a research paper / arXiv link below.</p>
+          <p class="empty-text">No models loaded. Ask OmniBCI in chat to find models for the target dataset, or upload a research paper / arXiv link below.</p>
           <div class="model-action-row">
-            <button class="btn btn-sm btn-primary" id="findModelsQuickBtn">🔍 Search Models for Kaggle</button>
+            <button class="btn btn-sm btn-primary" id="findModelsQuickBtn">🔍 Search Models for Dataset</button>
             <button class="btn btn-sm btn-outline" id="uploadPaperBtn">📄 Upload Custom Paper</button>
           </div>
         </div>
