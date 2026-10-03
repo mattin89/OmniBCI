@@ -1,0 +1,36 @@
+# Environment variables & secrets (CRITICAL: Never commit API keys)
+.env
+*.env
+.env.*
+!.env.example
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs & temp files
+*.log
+.scratch/
+
+# Node / Frontend build (if applicable)
+node_modules/
+dist/
+build/
+.next/
+
+# Large temporary datasets (mock data is generated automatically by scripts)
+omnibci/data/kaggle_dataset/*.npz

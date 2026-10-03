@@ -1,0 +1,121 @@
+version: "1.0"
+name: "OmniBCI-Discovery-Lab"
+description: "Omnigent meta-harness orchestrating Paper2Agent and Kaggle BCI cross-subject motor decoding."
+
+workspace:
+  root: "./omnibci"
+  sandbox:
+    isolation: "omnibox"
+    network_egress: "restricted"
+    allowed_domains:
+      - "api.anthropic.com"
+      - "api.openalex.org"
+      - "api.github.com"
+      - "www.kaggle.com"
+
+governance:
+  budget_cap_usd: 25.00
+  warning_threshold_usd: 20.00
+  hard_stop_usd: 24.00
+  enforce_human_gates: true
+
+agents:
+  literature_agent:
+    role: "Scientific Literature & Codebase Harvester"
+    model: "claude-3-5-haiku-20241022"
+    system_prompt: |
+      You are the Literature & Codebase Harvester for OmniBCI Lab.
+      Your responsibility is to query OpenAlex, arXiv, and GitHub to find reproducible
+      papers with public repositories tackling cross-subject EEG motor imagery decoding.
+      You verify repository accessibility, extract algorithmic specifications, and generate
+      structured JSON citations with DOI references.
+    tools:
+      - "search_openalex"
+      - "fetch_arxiv"
+      - "inspect_github_repo"
+    handoff_to: "paper2agent_synthesizer"
+
+  paper2agent_synthesizer:
+    role: "Paper2Agent MCP Tool Synthesizer"
+    model: "claude-3-5-sonnet-20241022"
+    system_prompt: |
+      You implement the Stanford Paper2Agent methodology.
+      You inspect candidate BCI repositories, extract model architectures and preprocessing
+      logic into standardized Model Context Protocol (MCP) tools, and write automated
+      unit tests to verify execution on mock EEG tensors before registering them.
+    tools:
+      - "analyze_repository"
+      - "extract_mcp_tool"
+      - "run_mcp_unit_test"
+      - "register_mcp_catalog"
+    handoff_to: "experiment_planner"
+
+  kaggle_data_agent:
+    role: "Kaggle Dataset Ingestion & Harmonization Specialist"
+    model: "claude-3-5-haiku-20241022"
+    system_prompt: |
+      You manage the UK BCI Consortium dataset (Low Cost Motor Imagery Decoding for Rehab).
+      You harmonize 17-subject wearable EEG CSV streams, apply 8-30 Hz Butterworth bandpass
+      filtering, verify channel montages, and set up Leave-One-Subject-Out (LOSO) cross-validation splits.
+    tools:
+      - "load_kaggle_csv"
+      - "bandpass_filter_eeg"
+      - "generate_loso_splits"
+    handoff_to: "experiment_planner"
+
+  experiment_planner:
+    role: "Scientific Hypothesis & Experiment Planner"
+    model: "claude-3-5-sonnet-20241022"
+    system_prompt: |
+      You are the Experiment Planner. You formulate testable hypotheses comparing
+      geometric Riemannian invariance (Euclidean Alignment) against end-to-end deep
+      convolutional features (EEGNet, ShallowFBCSPNet) to solve inter-subject domain shift.
+      You rank experiments by expected information gain and compute resource efficiency.
+    tools:
+      - "formulate_hypotheses"
+      - "design_experiment_matrix"
+      - "estimate_compute_budget"
+    handoff_to: "safety_agent"
+
+  safety_agent:
+    role: "Clinical BCI Safety & Human Approval Governor"
+    model: "claude-3-5-sonnet-20241022"
+    system_prompt: |
+      You enforce clinical safety for stroke neurorehabilitation.
+      Unintended robotic actuation during patient rest can cause physical injury.
+      You verify that model False Positive Rate (FPR) remains below 10%, verify single-trial
+      latency is under 100ms, check token budget consumption, and trigger human approval gates
+      before high-consequence benchmark runs.
+    policies:
+      - "safety_policy"
+      - "cost_control_policy"
+    tools:
+      - "check_fpr_safety"
+      - "check_latency_budget"
+      - "request_human_approval"
+    handoff_to: "experiment_runner"
+
+  experiment_runner:
+    role: "Sandbox Experiment Runner & Verifier"
+    model: "claude-3-5-haiku-20241022"
+    system_prompt: |
+      You execute benchmark runs in the isolated Omnibox sandbox using the registered
+      Paper2Agent MCP tools. You compute cross-subject accuracy, Cohen's Kappa, ROC-AUC,
+      and generate submission-ready CSV files formatted for the Kaggle competition.
+    tools:
+      - "execute_loso_benchmark"
+      - "export_kaggle_submission"
+      - "log_trial_telemetry"
+    handoff_to: "analysis_agent"
+
+  analysis_agent:
+    role: "Scientific Discovery & Synthesis Agent"
+    model: "claude-3-5-sonnet-20241022"
+    system_prompt: |
+      You analyze cross-subject benchmark results. You run statistical significance tests
+      (Wilcoxon signed-rank), diagnose subject-specific failure modes, generate publication-ready
+      figures, and update the scientific hypothesis for the next discovery iteration.
+    tools:
+      - "statistical_significance_test"
+      - "plot_cross_subject_radar"
+      - "synthesize_next_decision"

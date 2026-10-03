@@ -1,0 +1,36 @@
+policies:
+  - name: "cost_control_policy"
+    type: "governance"
+    description: "Enforces strict token and API spending limits within the $25 Anthropic credit."
+    rules:
+      max_budget_usd: 25.00
+      alert_threshold_usd: 20.00
+      hard_cutoff_usd: 24.00
+      action_on_exceed: "deny"
+
+  - name: "safety_policy"
+    type: "clinical"
+    description: "Guards against involuntary robotic exoskeleton actuation in stroke rehabilitation."
+    rules:
+      max_false_positive_rate: 0.10
+      max_single_trial_latency_ms: 100.0
+      action_on_violation: "flag_and_ask"
+
+  - name: "human_approval_policy"
+    type: "human_in_the_loop"
+    description: "Requires explicit researcher sign-off before official Kaggle submission or major hyperparameter search."
+    gates:
+      - action: "export_official_submission"
+        decision: "ask"
+      - action: "run_extended_100_epoch_sweep"
+        decision: "ask"
+      - action: "execute_sandboxed_loso_benchmark"
+        decision: "allow"
+
+  - name: "omnibox_sandbox_policy"
+    type: "infrastructure"
+    description: "Isolates Python execution within the local project workspace."
+    rules:
+      allow_file_read: ["./omnibci/*", "./*.pdf"]
+      allow_file_write: ["./omnibci/submission/*", "./omnibci/data/*", "./omnibci/webapp/static/*"]
+      deny_system_modifications: true
