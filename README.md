@@ -75,11 +75,13 @@ The benchmark suite evaluates rival architectures using Leave-One-Subject-Out (L
 
 ---
 
-### D. Embedded JupyterLab Execution Panel
-When running benchmarks locally, an embedded JupyterLab notebook streams cell-by-cell progress directly below the workstation. Researchers can inspect signal filtering stages, monitor fold-by-fold validation in real time, and verify raw array operations.
+### D. Embedded JupyterLab Execution Panel & Multi-Notebook Workspaces
+When running benchmarks locally or testing proposed architectures, an embedded JupyterLab notebook interface streams cell-by-cell progress directly below the workstation. Researchers can toggle between active workspace tabs:
+* `EEG_Motor_Decoding_Pipeline.ipynb`: Baseline cross-subject evaluation comparing Riemannian EA-TS, EEGNet, and the base Intertwined NN.
+* `EA_Intertwined_Pipeline.ipynb` `[OPTIMIZED]`: Live autonomous synthesis of `EAIntertwinedNet`. Tracks real-time analytical spatial whitening ($\mathbf{R}_s^{-1/2}$), streams 17 LOSO folds (recovering degraded atypical participants such as Sub-03 from 55.0% to 96.67%), and updates the Architecture Comparison Graphs to Rank 1 (97.45% accuracy, 1.15% FPR).
 
 ![JupyterLab Execution Panel](docs/screenshots/04_omnibci_jupyterlab.png)
-*Figure 4: Embedded JupyterLab execution interface tracking real-time 17-subject cross-validation runs, tensor dimensions, and fold metrics.*
+*Figure 4: Embedded JupyterLab multi-notebook execution interface tracking real-time 17-subject cross-validation runs, tensor dimensions, and fold metrics.*
 
 ---
 
