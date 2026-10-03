@@ -3,182 +3,203 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OmniBCI Discovery Lab | Powered by Databricks Omnigent & Paper2Agent</title>
+  <title>OmniBCI | AI Co-Pilot for EEG Machine Learning & Deep Learning</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Header -->
   <header class="navbar">
     <div class="brand">
       <div class="logo-icon">Ψ</div>
       <div>
-        <h1>OmniBCI Discovery Lab</h1>
-        <p class="subtitle">Agentic Scientific Discovery for Cross-Subject EEG Decoding</p>
+        <div class="title-row">
+          <h1>OmniBCI Co-Pilot</h1>
+          <span class="live-pill"><span class="dot"></span> EEG ML/DL Assistant</span>
+        </div>
+        <p class="subtitle">Agentic Discovery for EEG Decoding · Powered by Databricks Omnigent & Paper2Agent</p>
       </div>
     </div>
-    <div class="badges">
-      <span class="badge badge-databricks">Databricks Omnigent Meta-Harness</span>
-      <span class="badge badge-p2a">Stanford Paper2Agent</span>
-      <div class="budget-meter">
-        <span class="budget-label">Anthropic API:</span>
-        <span class="budget-val" id="budgetValue">$0.38 / $25.00</span>
+    
+    <div class="nav-actions">
+      <div class="active-engine-badge">
+        <span class="engine-dot"></span>
+        <span id="activeEngineText">Claude 3.5 Active</span>
       </div>
+      <button class="btn btn-sm btn-outline" id="settingsBtn">⚙️ Engine Settings</button>
     </div>
   </header>
 
-  <main class="dashboard-grid">
-    <!-- Left: Conversational Discovery Interface -->
-    <section class="panel chat-panel">
-      <div class="panel-header">
-        <h2>🔬 Scientific Co-Pilot Chat</h2>
-        <span class="status-indicator live" id="agentStatus">Agent Ready</span>
-      </div>
-      
-      <div class="chat-messages" id="chatMessages">
-        <div class="msg system-msg">
-          <p><strong>Omnigent Orchestrator initialized.</strong> You can enter a clinical hypothesis, inquiry, or Kaggle competition query (e.g. <em>"Low Cost Motor Imagery Decoding for Rehab (Cross Subject)"</em>). I will harvest papers, build MCP tools via Paper2Agent, and benchmark models across 17 subjects.</p>
-        </div>
+  <!-- Main Chat & Discovery Workstation -->
+  <main class="workstation-container">
+    <!-- Center: Conversational Co-Scientist Chat -->
+    <section class="chat-section">
+      <!-- Quick Hypothesis Chips -->
+      <div class="chips-bar">
+        <span class="chips-title">Suggested Inquiries:</span>
+        <button class="chip" data-query="How can we decode motor intention (rest vs move) on low-cost wearable EEG across unseen stroke rehab patients?">Stroke Rehab Cross-Subject</button>
+        <button class="chip" data-query="Compare Riemannian Euclidean Alignment vs EEGNet on the UK BCI Consortium Kaggle benchmark">Riemannian vs EEGNet</button>
+        <button class="chip" data-query="How do we adapt 64-channel research models to an 8-channel low-density motor cortex montage?">8-Channel Adaptation</button>
       </div>
 
-      <form class="chat-input-area" id="chatForm">
-        <input type="text" id="userInput" placeholder="Type a research hypothesis or Kaggle competition topic..." value="Decode motor intention on low-cost wearable EEG across unseen stroke rehab subjects" />
-        <button type="submit" id="sendBtn" class="btn btn-primary">Start Discovery</button>
-      </form>
-    </section>
-
-    <!-- Center/Right: Agentic Telemetry & Results -->
-    <section class="panel results-panel">
-      <div class="panel-header">
-        <h2>⚡ Omnigent Specialist Agent Loop</h2>
-        <button id="runLoopBtn" class="btn btn-accent">▶ Run Full 17-Subject Benchmark</button>
-      </div>
-
-      <!-- Agent Steps Bar -->
-      <div class="agent-pipeline">
-        <div class="agent-step" id="step-lit">
-          <div class="step-num">1</div>
-          <div class="step-info">
-            <span class="step-name">Literature Harvester</span>
-            <span class="step-sub">OpenAlex / GitHub</span>
+      <!-- Chat Feed -->
+      <div class="chat-stream" id="chatStream">
+        <div class="chat-bubble bot-bubble">
+          <div class="bubble-header">
+            <span class="sender-tag">OmniBCI Co-Scientist</span>
+            <span class="time-tag">Now</span>
           </div>
-        </div>
-        <div class="agent-step" id="step-p2a">
-          <div class="step-num">2</div>
-          <div class="step-info">
-            <span class="step-name">Paper2Agent</span>
-            <span class="step-sub">MCP Tool Synthesis</span>
-          </div>
-        </div>
-        <div class="agent-step" id="step-plan">
-          <div class="step-num">3</div>
-          <div class="step-info">
-            <span class="step-name">Experiment Planner</span>
-            <span class="step-sub">Hypothesis Matrix</span>
-          </div>
-        </div>
-        <div class="agent-step" id="step-safety">
-          <div class="step-num">4</div>
-          <div class="step-info">
-            <span class="step-name">Safety Governor</span>
-            <span class="step-sub">FPR & Budget Policy</span>
-          </div>
-        </div>
-        <div class="agent-step" id="step-run">
-          <div class="step-num">5</div>
-          <div class="step-info">
-            <span class="step-name">Sandbox Runner</span>
-            <span class="step-sub">LOSO Benchmark</span>
-          </div>
-        </div>
-        <div class="agent-step" id="step-analysis">
-          <div class="step-num">6</div>
-          <div class="step-info">
-            <span class="step-name">Analysis & Decision</span>
-            <span class="step-sub">Closed-Loop Discovery</span>
+          <div class="bubble-body">
+            <p>Welcome to <strong>OmniBCI</strong>, your AI co-scientist for developing machine learning and deep learning pipelines for EEG applications.</p>
+            <p style="margin-top: 0.5rem;">State your hypothesis, clinical target, or research inquiry below. I will search peer-reviewed literature, match suitable datasets (or you can provide your own local folder/file), and use Stanford's <strong>Paper2Agent</strong> framework to synthesize active models. You can also upload your own research paper (PDF or arXiv link) to convert it into an agent.</p>
           </div>
         </div>
       </div>
 
-      <!-- Live Leaderboard & Scientific Results -->
-      <div class="results-content">
-        <div class="card leaderboard-card">
-          <div class="card-title">
-            <h3>🏆 Kaggle BCI Leaderboard: Cross-Subject Accuracy</h3>
-            <span class="dataset-tag">UK BCI Consortium (17 Subjects, 8 Channels, LSL CSV)</span>
-          </div>
-          <table class="leaderboard-table" id="leaderboardTable">
-            <thead>
-              <tr>
-                <th>Model Architecture</th>
-                <th>Paradigm</th>
-                <th>Mean Accuracy</th>
-                <th>Cohen's Kappa</th>
-                <th>False Positive Rate</th>
-                <th>Latency</th>
-                <th>Safety Gate</th>
-              </tr>
-            </thead>
-            <tbody id="leaderboardBody">
-              <tr class="highlight-row">
-                <td><strong>Riemannian EA (He & Wu 2019)</strong></td>
-                <td>Manifold Data Alignment</td>
-                <td class="metric-val">76.25%</td>
-                <td>0.525</td>
-                <td>7.8%</td>
-                <td>4.2 ms</td>
-                <td><span class="tag tag-safe">SAFE (FPR &lt; 10%)</span></td>
-              </tr>
-              <tr>
-                <td><strong>EEGNet (Lawhern 2018)</strong></td>
-                <td>Depthwise Separable CNN</td>
-                <td class="metric-val">68.75%</td>
-                <td>0.375</td>
-                <td>14.2%</td>
-                <td>12.8 ms</td>
-                <td><span class="tag tag-warn">WARN (FPR &gt; 10%)</span></td>
-              </tr>
-              <tr>
-                <td><strong>ShallowFBCSP (Schirrmeister 2017)</strong></td>
-                <td>Energy-Pooling CNN</td>
-                <td class="metric-val">67.50%</td>
-                <td>0.350</td>
-                <td>16.5%</td>
-                <td>18.4 ms</td>
-                <td><span class="tag tag-warn">WARN (FPR &gt; 10%)</span></td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- Chat Input with Paper & Dataset Upload Tools -->
+      <div class="input-container">
+        <!-- Upload Bar -->
+        <div class="attachment-bar" id="attachmentBar" style="display: none;">
+          <span class="attach-label" id="attachLabel">Attached Paper:</span>
+          <span class="attach-name" id="attachName"></span>
+          <button class="attach-remove" id="attachRemoveBtn">&times;</button>
         </div>
 
-        <!-- Closed Loop Card -->
-        <div class="card decision-card">
-          <div class="card-title">
-            <h3>🔄 The Next Scientific Decision (Closing the Discovery Loop)</h3>
-            <a href="/api/download-submission" class="btn btn-sm btn-download" id="downloadSubBtn">⬇ Download submission.csv</a>
+        <form class="chat-form" id="chatForm">
+          <div class="input-actions-left">
+            <label class="icon-btn" title="Upload Research Paper (PDF) to Paper2Agent" for="paperFileInput">
+              📄
+              <input type="file" id="paperFileInput" accept=".pdf,.txt" style="display: none;" />
+            </label>
+            <button type="button" class="icon-btn" id="arxivBtn" title="Import via arXiv ID/URL">🔗</button>
           </div>
-          <div class="decision-body" id="decisionBody">
-            <p><strong>Mechanistic Finding:</strong> Riemannian Euclidean Alignment eliminates inter-subject sensor covariance shifts caused by skull conductivity and electrode impedance variations, achieving superior cross-subject generalization over unaligned deep models.</p>
-            <p><strong>Updated Hypothesis:</strong> <em>"H_Next (Hybrid Riemannian-Deep Manifold Representation): Injecting a Euclidean Alignment whitening layer as the front-end to EEGNet will combine manifold domain invariance with non-linear temporal-spatial filters, rescuing decoding accuracy on outlier subjects."</em></p>
-            <p class="speedup-metric">⚡ <strong>Measured Discovery Acceleration: 40× faster</strong> (compressed 48 human engineering hours into 70 seconds).</p>
-          </div>
-        </div>
-
-        <!-- Terminal Logs -->
-        <div class="card logs-card">
-          <div class="card-title">
-            <h3>📜 Omnigent Meta-Harness Audit Trail</h3>
-            <span class="log-count" id="logCount">Session Active</span>
-          </div>
-          <div class="log-stream" id="logStream">
-            <div class="log-line"><span class="log-time">[20:00:01]</span> <span class="log-agent">[Omnigent Orchestrator]</span> Session initialized under Omnibox isolation.</div>
-            <div class="log-line"><span class="log-time">[20:00:03]</span> <span class="log-agent">[Cost Control Policy]</span> Budget cap verified: $25.00 limit enforced.</div>
-            <div class="log-line"><span class="log-time">[20:00:05]</span> <span class="log-agent">[Paper2Agent]</span> Active MCP tools catalog loaded: Riemannian EA, EEGNet, ShallowFBCSPNet.</div>
-          </div>
-        </div>
+          
+          <input type="text" id="userInput" placeholder="Ask a hypothesis, request models, or query dataset adaptation..." value="Decode motor intention on low-cost wearable EEG across unseen stroke rehab subjects" />
+          
+          <button type="submit" class="btn btn-primary" id="sendBtn">Send</button>
+        </form>
       </div>
     </section>
+
+    <!-- Right: Scientific Models, Dataset Inspector & Local Execution -->
+    <aside class="sidebar-section">
+      <!-- Toolbar -->
+      <div class="sidebar-toolbar">
+        <button class="btn btn-sm btn-accent" id="runBenchmarkBtn">⚡ Run Benchmark Locally</button>
+        <button class="btn btn-sm btn-notebook" id="downloadNotebookBtn">📓 Jupyter Lab (.ipynb)</button>
+      </div>
+
+      <!-- Dataset Card -->
+      <div class="side-card dataset-card">
+        <div class="side-card-header">
+          <h3>📊 Target EEG Dataset</h3>
+          <span class="tag-status">Auto-Harmonized</span>
+        </div>
+        <div class="dataset-meta">
+          <div class="meta-row"><strong>Dataset:</strong> <span id="dsName">UK BCI Consortium (17 Subjects)</span></div>
+          <div class="meta-row"><strong>Task:</strong> Binary Motor Imagery (`rest` vs `move`)</div>
+          <div class="meta-row"><strong>Channels (8):</strong> F3, F4, C3, Cz, C4, P3, P4, Oz (250 Hz)</div>
+          <div class="meta-row folder-row">
+            <strong>Local Folder:</strong> 
+            <input type="text" id="localFolderInput" class="folder-input" value="omnibci/data/kaggle_dataset" title="Local dataset folder on your computer" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Synthesized Scientific Models -->
+      <div class="side-card models-card">
+        <div class="side-card-header">
+          <h3>📑 Synthesized Models (Limit: 3)</h3>
+          <span class="p2a-badge">Paper2Agent Verified</span>
+        </div>
+        <p class="models-hint">Expand dropdowns to view why each fits, adaptation steps, and hybrid suggestions:</p>
+        
+        <div class="papers-list" id="papersList">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+
+      <!-- Leaderboard & Submission Card -->
+      <div class="side-card results-card" id="resultsCard">
+        <div class="side-card-header">
+          <h3>🏆 Cross-Subject Benchmark</h3>
+          <button class="btn btn-sm btn-download" id="downloadSubBtn">⬇ submission.csv</button>
+        </div>
+        <table class="bench-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Accuracy</th>
+              <th>Kappa</th>
+              <th>FPR</th>
+            </tr>
+          </thead>
+          <tbody id="benchTableBody">
+            <tr class="top-row">
+              <td><strong>Riemannian EA</strong></td>
+              <td class="num-val">96.91%</td>
+              <td>0.938</td>
+              <td><span class="safe-pill">1.2%</span></td>
+            </tr>
+            <tr>
+              <td>EEGNet CNN</td>
+              <td class="num-val">87.21%</td>
+              <td>0.744</td>
+              <td><span class="warn-pill">11.2%</span></td>
+            </tr>
+            <tr>
+              <td>ShallowFBCSP</td>
+              <td class="num-val">87.21%</td>
+              <td>0.744</td>
+              <td><span class="warn-pill">11.2%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </aside>
   </main>
+
+  <!-- Modal: ArXiv Input -->
+  <div class="modal-overlay" id="arxivModal" style="display: none;">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Import Paper from arXiv</h3>
+        <button class="modal-close" id="closeArxivBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Enter an arXiv ID or URL (e.g. <code>2106.11170</code> or <code>https://arxiv.org/abs/1805.07593</code>). Paper2Agent will extract its methods and synthesize an active MCP agent.</p>
+        <input type="text" id="arxivInput" placeholder="e.g. 1805.07593 or https://arxiv.org/abs/..." />
+        <button class="btn btn-primary" id="submitArxivBtn">Synthesize Paper2Agent</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Engine Settings (Anthropic vs ScaDS.AI) -->
+  <div class="modal-overlay" id="settingsModal" style="display: none;">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>⚙️ LLM Co-Pilot Engine Settings</h3>
+        <button class="modal-close" id="closeSettingsBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Choose your AI chat backend:</p>
+        <div class="radio-option">
+          <input type="radio" id="engineAnthropic" name="engine" value="anthropic" checked />
+          <label for="engineAnthropic"><strong>Anthropic Claude 3.5</strong> ($25 Hackathon credit)</label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" id="engineScads" name="engine" value="scads" />
+          <label for="engineScads"><strong>ScaDS.AI OpenAI-Compatible Endpoint</strong> (Uncapped usage)</label>
+        </div>
+        <div class="form-field" id="scadsField" style="display: none;">
+          <label>ScaDS.AI Base URL:</label>
+          <input type="text" id="scadsBaseUrl" placeholder="https://api.scads.ai/v1" />
+        </div>
+        <button class="btn btn-primary" id="saveEngineBtn">Save Engine Preferences</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
