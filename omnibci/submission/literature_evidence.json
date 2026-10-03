@@ -2,6 +2,28 @@
   "query_timestamp": "2026-10-03",
   "papers": [
     {
+      "paper_id": "duggento_delorenzo_2022_intertwined",
+      "title": "An intertwined neural network model for EEG classification in brain-computer interfaces",
+      "authors": [
+        "A. Duggento",
+        "M. De Lorenzo",
+        "S. Bargione",
+        "A. Conti",
+        "V. Catrambone",
+        "G. Valenza",
+        "N. Toschi"
+      ],
+      "journal": "arXiv:2208.08860 [eess.SP]",
+      "year": 2022,
+      "doi": "10.48550/arXiv.2208.08860",
+      "arxiv_url": "https://arxiv.org/abs/2208.08860",
+      "github_url": "https://github.com/andreaduggento/EEG_intertwined_architecture",
+      "abstract": "Presents a deep neural network architecture engineered to provide state-of-the-art performance in motor imagery classification while remaining robust to preprocessing. Based on intertwined time-distributed fully connected (tdFC) and space-distributed 1D temporal convolutional layers (sdConv), explicitly modeling spatial-temporal interactions across all levels of feature hierarchy.",
+      "method_type": "Deep Learning / Spatio-Temporal Intertwining",
+      "primary_model": "Intertwined Neural Network (tdFC + sdConv)",
+      "claimed_accuracy": "Up to 99% within-subject"
+    },
+    {
       "paper_id": "paper_he_wu_2019",
       "title": "Transfer Learning for Brain-Computer Interfaces: A Euclidean Space Data Alignment Approach",
       "authors": [
@@ -11,8 +33,9 @@
       "journal": "IEEE Transactions on Biomedical Engineering",
       "year": 2019,
       "doi": "10.1109/TBME.2019.2913914",
+      "arxiv_url": "https://arxiv.org/abs/1904.09241",
+      "github_url": "https://github.com/drwuHUST/TLBCI",
       "abstract": "EEG signals suffer from significant inter-subject and inter-session variability. This paper proposes Euclidean space data alignment (EA) to reduce domain shift by aligning covariance matrices before feature extraction or Riemannian classification.",
-      "github_url": "https://github.com/drwuHUST/EEGEA",
       "method_type": "Riemannian Geometry / Data Alignment",
       "primary_model": "Euclidean Alignment + Tangent Space Logistic Regression",
       "claimed_accuracy_bci42a": "75.3% cross-subject"
@@ -31,34 +54,12 @@
       "journal": "Journal of Neural Engineering",
       "year": 2018,
       "doi": "10.1088/1741-2552/aace8c",
-      "abstract": "Proposes EEGNet, an architecture using depthwise separable convolutions that encapsulates frequency filtering and spatial filtering in a lightweight parameter footprint (< 3,000 parameters).",
+      "arxiv_url": "https://arxiv.org/abs/1611.08024",
       "github_url": "https://github.com/vlawhern/arl-eegmodels",
+      "abstract": "Proposes EEGNet, an architecture using depthwise separable convolutions that encapsulates frequency filtering and spatial filtering in a lightweight parameter footprint (< 3,000 parameters).",
       "method_type": "Deep Learning / End-to-End CNN",
       "primary_model": "EEGNet",
       "claimed_accuracy_bci42a": "72.8% within-subject"
-    },
-    {
-      "paper_id": "paper_schirrmeister_2017",
-      "title": "Deep learning with convolutional neural networks for EEG decoding and visualization",
-      "authors": [
-        "R. T. Schirrmeister",
-        "J. T. Springenberg",
-        "L. D. J. Fiederer",
-        "M. Glasstetter",
-        "K. Eggensperger",
-        "M. Tangermann",
-        "F. Hutter",
-        "W. Burgard",
-        "T. Ball"
-      ],
-      "journal": "Human Brain Mapping",
-      "year": 2017,
-      "doi": "10.1002/hbm.23730",
-      "abstract": "Presents ShallowFBCSPNet and DeepConvNet, demonstrating that temporal-spatial convolutions with logarithmic power pooling learn representations comparable to Filter Bank Common Spatial Pattern algorithms.",
-      "github_url": "https://github.com/braindecode/braindecode",
-      "method_type": "Deep Learning / Energy Pooling",
-      "primary_model": "ShallowFBCSPNet",
-      "claimed_accuracy_bci42a": "73.5% within-subject"
     }
   ]
 }

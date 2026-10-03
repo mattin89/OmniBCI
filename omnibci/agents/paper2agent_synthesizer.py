@@ -42,7 +42,9 @@ class Paper2AgentSynthesizer:
             
             # Map paper to registered MCP implementation
             mcp_key = None
-            if "he_wu" in pid:
+            if "intertwined" in pid or "duggento" in pid or "2208.08860" in pid or "de_lorenzo" in pid:
+                mcp_key = "intertwined_nn"
+            elif "he_wu" in pid:
                 mcp_key = "riemannian_ea"
             elif "lawhern" in pid:
                 mcp_key = "eegnet"

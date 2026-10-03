@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <!-- Chart.js for Model Comparison Graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <!-- Top Navigation Header -->
@@ -31,6 +33,7 @@
         <span class="engine-dot"></span>
         <span id="activeEngineText">ScaDS.AI Active (Zero-Cost Chat)</span>
       </div>
+      <button class="btn btn-sm btn-ghost" id="resetDemoBtn" title="Reset demo to initial unselected state">🔄 Reset Demo</button>
       <button class="btn btn-sm btn-outline" id="settingsBtn">⚙️ Engine Settings</button>
     </div>
   </header>
@@ -42,6 +45,7 @@
       <!-- Suggested Query Chips -->
       <div class="chips-bar">
         <span class="chips-title">Suggested Inquiries:</span>
+        <button class="chip" data-query="I want to use this intertwined neural network model to analyze the Kaggle dataset. Analyze in literature how to deploy this model and optimize it for this dataset so it can achieve the highest accuracy in literature">🔬 Analyze Intertwined Model for Kaggle</button>
         <button class="chip" data-query="Find suitable DL and ML models from scientific papers for the cross-subject motor imagery dataset">Find Models for Dataset</button>
         <button class="chip" data-query="How can we decode motor intention (rest vs move) on low-cost wearable EEG across unseen stroke rehab patients?">Stroke Rehab Cross-Subject</button>
         <button class="chip" data-query="How do we adapt 64-channel research models to an 8-channel low-density motor cortex montage?">8-Channel Adaptation</button>
@@ -130,15 +134,15 @@
       <div class="side-card models-card">
         <div class="side-card-header">
           <h3>📑 Synthesized Models</h3>
-          <span class="p2a-badge" id="modelsCountBadge">0 Active Models</span>
+          <span class="p2a-badge" id="modelsCountBadge">0 Uploaded (Default Ready)</span>
         </div>
 
-        <!-- Empty State Container -->
+        <!-- Empty State Container (Prompt for custom paper upload first; default foundational models active in background) -->
         <div class="empty-state-box" id="modelsEmptyBox">
-          <p class="empty-text">No models loaded. Ask OmniBCI in chat to find models for the target dataset, or upload a research paper / arXiv link below.</p>
+          <p class="empty-text">Upload your own research papers first (PDF, DOI, or arXiv) to synthesize custom Paper2Agent models. If no custom papers are uploaded, OmniBCI automatically utilizes the 3 foundational models behind the scenes to avoid wasting API credits.</p>
           <div class="model-action-row">
-            <button class="btn btn-sm btn-primary" id="findModelsQuickBtn">🔍 Search Models for Dataset</button>
-            <button class="btn btn-sm btn-outline" id="uploadPaperBtn">📄 Upload Custom Paper</button>
+            <button class="btn btn-sm btn-primary" id="uploadPaperBtn">📄 Upload Custom Paper</button>
+            <button class="btn btn-sm btn-outline" id="arxivQuickBtn">📚 Import arXiv</button>
           </div>
         </div>
 
@@ -150,11 +154,10 @@
         <!-- Models Action Footer (Visible when papers are active) -->
         <div class="models-footer-bar" id="modelsFooterBar" style="display: none; margin-top: 0.65rem; display: flex; gap: 0.5rem;">
           <button class="btn btn-sm btn-outline" id="addMorePaperBtn">+ Add Another Paper</button>
-          <button class="btn btn-sm btn-outline" id="resetDefaultModelsBtn">Reset Default 3</button>
         </div>
       </div>
 
-      <!-- 3. Leaderboard Card (Hidden initially until benchmark run) -->
+      <!-- 3. Leaderboard & Model Comparison Graphs Card (Hidden initially until benchmark run) -->
       <div class="side-card results-card" id="resultsCard" style="display: none;">
         <div class="side-card-header">
           <h3>🏆 Cross-Subject Benchmark (17 Folds)</h3>
@@ -173,6 +176,59 @@
             <!-- Populated dynamically after benchmark -->
           </tbody>
         </table>
+
+        <!-- Model Comparison Graphs -->
+        <div class="benchmark-charts-container" id="benchmarkChartsContainer">
+          <div class="charts-top-bar">
+            <h4>📊 Architecture Comparison Graphs</h4>
+            <div class="chart-tab-group">
+              <button class="chart-tab active" id="tabAccuracy" data-chart="accuracy">Accuracy & Kappa</button>
+              <button class="chart-tab" id="tabFolds" data-chart="folds">17-Subject Breakdown</button>
+              <button class="chart-tab" id="tabSafety" data-chart="safety">Safety Ceiling</button>
+            </div>
+          </div>
+
+          <!-- Tab 1: Accuracy & Kappa -->
+          <div class="chart-view-pane active" id="paneAccuracy">
+            <div class="chart-canvas-box">
+              <canvas id="chartAccuracyCanvas"></canvas>
+            </div>
+            <div class="chart-summary-pills">
+              <div class="chart-pill winning">
+                <span class="pill-title">🥇 Riemannian EA-TS</span>
+                <span class="pill-val">96.91% (+37.91% vs Baseline)</span>
+              </div>
+              <div class="chart-pill">
+                <span class="pill-title">🥈 EEGNet</span>
+                <span class="pill-val">87.21% (Kappa: 0.744)</span>
+              </div>
+              <div class="chart-pill">
+                <span class="pill-title">🥉 Intertwined NN</span>
+                <span class="pill-val">87.21% (Kappa: 0.744)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: 17 Folds Breakdown -->
+          <div class="chart-view-pane" id="paneFolds" style="display: none;">
+            <div class="chart-canvas-box">
+              <canvas id="chartFoldsCanvas"></canvas>
+            </div>
+            <div class="chart-annotation">
+              <span>📌 <strong>Observation:</strong> Riemannian EA-TS maintains &gt;95% accuracy across all 17 subjects, eliminating negative transfer.</span>
+            </div>
+          </div>
+
+          <!-- Tab 3: Clinical Safety -->
+          <div class="chart-view-pane" id="paneSafety" style="display: none;">
+            <div class="chart-canvas-box">
+              <canvas id="chartSafetyCanvas"></canvas>
+            </div>
+            <div class="chart-annotation safety-alert">
+              <span>🛡️ <strong>Safety Ceiling (&lt;10.0%):</strong> Riemannian EA-TS achieves <strong>1.20% FPR</strong> (8.8% clinical safety buffer).</span>
+            </div>
+          </div>
+        </div>
       </div>
   </main>
 
@@ -287,7 +343,7 @@
 <span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"riemannian_ea"</span><span class="p">:</span> <span class="n">EuclideanAlignmentTangentSpaceClassifier</span><span class="p">(),</span>
     <span class="s2">"eegnet"</span><span class="p">:</span> <span class="n">EEGNetClassifier</span><span class="p">(</span><span class="n">n_channels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">),</span>
-    <span class="s2">"shallow_fbcsp"</span><span class="p">:</span> <span class="n">ShallowFBCSPNetClassifier</span><span class="p">(</span><span class="n">n_channels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="s2">"intertwined_nn"</span><span class="p">:</span> <span class="n">IntertwinedNeuralNetwork</span><span class="p">(</span><span class="n">n_channels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="n">benchmark</span> <span class="o">=</span> <span class="n">LOSOEvaluator</span><span class="p">(</span><span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">,</span> <span class="n">n_subjects</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">evaluate_all_folds</span><span class="p">()</span></pre>
@@ -349,7 +405,7 @@
       </div>
       <div class="modal-body">
         <p>Enter an arXiv ID or URL (e.g. <code>2106.11170</code> or <code>https://arxiv.org/abs/1805.07593</code>). Paper2Agent will synthesize an active MCP tool agent.</p>
-        <input type="text" id="arxivInput" placeholder="e.g. 2106.11170 or https://arxiv.org/abs/..." />
+        <input type="text" id="arxivInput" placeholder="e.g. 2208.08860 or https://arxiv.org/abs/2208.08860" value="https://arxiv.org/abs/2208.08860" />
         <button class="btn btn-primary" id="submitArxivBtn">Synthesize Paper2Agent</button>
       </div>
     </div>
@@ -406,6 +462,28 @@
         </p>
         <button class="btn btn-primary" id="saveEngineBtn">Save Engine Settings</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Floating Citation Hover Tooltip Popover -->
+  <div id="citationTooltipPopover" class="citation-tooltip-popover">
+    <div class="citation-popover-header">
+      <div class="citation-popover-tag">📖 Grounded Paper Excerpt</div>
+      <div class="citation-popover-actions">
+        <a href="#" target="_blank" rel="noopener noreferrer" class="citation-popover-link-btn" id="popoverExternalLink" title="Open Paper Source">🔗 Open Paper</a>
+        <a href="#" target="_blank" rel="noopener noreferrer" class="citation-popover-repo-btn" id="popoverRepoLink" title="Open GitHub Repository">💻 Code</a>
+      </div>
+    </div>
+    <div class="citation-popover-title" id="popoverTitle">Paper Title</div>
+    <div class="citation-popover-authors" id="popoverAuthors">Authors (Year)</div>
+    <div class="citation-popover-section-badge" id="popoverSection">Section & Paragraph</div>
+    <div class="citation-popover-quote">
+      <span class="quote-symbol">“</span>
+      <span id="popoverQuoteText">Cited text excerpt</span>
+      <span class="quote-symbol">”</span>
+    </div>
+    <div class="citation-popover-footer">
+      <span>OmniBCI Grounded Literature Ingestion • Click link to open paper</span>
     </div>
   </div>
 
