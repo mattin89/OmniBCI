@@ -1,6 +1,7 @@
 # OmniBCI: Autonomous AI Co-Scientist for Wearable EEG Motor Intention Decoding
 
 [![Hack-Nation Challenge 03](https://img.shields.io/badge/Hack--Nation-Challenge%2003%20Motor%20Intention%20Decoding-blue.svg)](https://hack-nation.com)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen.svg)](https://mattin89.github.io/OmniBCI/)
 [![Kaggle Benchmark](https://img.shields.io/badge/Kaggle-UK%20BCI%20Consortium%20(17%20Subjects)-20BEFF.svg)](https://www.kaggle.com/competitions/low-cost-motor-imagery-decoding-for-rehab-cross-subject)
 [![ScaDS.AI Llama-3.3-70B](https://img.shields.io/badge/ScaDS.AI-Llama--3.3--70B%20Inference-green.svg)](https://scads.ai)
 [![Paper2Agent Synthesis](https://img.shields.io/badge/Framework-Stanford%20Paper2Agent-cyan.svg)](https://github.com/jmiao24/Paper2Agent)
