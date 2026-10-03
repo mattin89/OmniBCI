@@ -23,7 +23,7 @@ This project was developed for **Hack-Nation's 7th Global AI Hackathon** (organi
 
 $$\text{Question} \longrightarrow \text{Evidence} \longrightarrow \text{Hypothesis} \longrightarrow \text{Experiment} \longrightarrow \text{Result} \longrightarrow \text{Updated Decision}$$
 
-In conventional computational neuroscience, moving from a published paper to a verified clinical pipeline consumes weeks or months of manual engineering. Researchers must read dense mathematical formulations, locate public GitHub repositories, resolve abandoned dependencies, match sampling rates and electrode layouts, write validation code, and tune training loops for individual subjects.
+In conventional computational neuroscience, moving from an idea to a verified clinical pipeline consumes weeks or months of manual engineering. Researchers must read dense mathematical formulations, locate public GitHub repositories, resolve abandoned dependencies, match sampling rates and electrode layouts, write validation code, and tune training loops for individual subjects.
 
 **OmniBCI eliminates this friction.** By integrating Databricks Omnigent with an interactive conversational co-pilot, tasks that previously took weeks or months execute in **minutes**. 
 
