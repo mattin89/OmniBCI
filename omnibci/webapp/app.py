@@ -81,23 +81,23 @@ FOUNDATIONAL_3_PAPERS = [
         "fit_rationale": "Directly resolves inter-subject domain shifts on low-density wearable EEG. Skull conductance and sensor placement cause spatial covariance rotations across subjects; Euclidean Alignment centers all subject covariance matrices to the identity matrix on the Riemannian manifold, ensuring robust zero-shot cross-subject transfer.",
         "adaptation_steps": [
             "Harmonize channel montage to standard 10-20 motor electrodes (Fz, C3, Cz, C4, PO7, Pz, PO8, Oz).",
-            "Apply zero-phase 8-30 Hz Butterworth bandpass filtering to isolate sensorimotor mu and beta rhythms.",
-            "Estimate per-subject reference covariance matrix R_bar = mean(X_i * X_i^T) and whiten trials with R_bar^(-1/2).",
-            "Project whitened covariance matrices to Euclidean Tangent Space at the Fréchet mean for linear classification."
+            "Apply zero-phase 8–30 Hz Butterworth bandpass filtering to isolate sensorimotor $\\mu$ and $\\beta$ rhythms.",
+            "Estimate per-subject reference covariance matrix $\\bar{\\mathbf{R}} = \\frac{1}{N}\\sum_{i=1}^N \\mathbf{X}_i \\mathbf{X}_i^\\top$ and whiten trials via $\\tilde{\\mathbf{X}}_i = \\bar{\\mathbf{R}}^{-1/2} \\mathbf{X}_i$.",
+            "Project whitened covariance matrices to Euclidean Tangent Space $\\mathbf{s}_i = \\mathrm{upper}(\\mathrm{logm}(\\mathbf{C}_i))$ at the Fréchet mean identity matrix $\\mathbf{I}_C$."
         ],
-        "unique_suggestion": "Hybrid EA-EEGNet: Use Euclidean Alignment as a differentiable spatial whitening front-end directly before feeding microvolt epochs into EEGNet's temporal convolutional layers. This combines manifold domain invariance with non-linear deep feature extraction.",
+        "unique_suggestion": "Hybrid EA-EEGNet: Use Euclidean Alignment $\\tilde{\\mathbf{X}} = \\bar{\\mathbf{R}}^{-1/2}\\mathbf{X}$ as a differentiable spatial whitening front-end directly before feeding microvolt epochs into EEGNet's temporal convolutional layers. This combines manifold domain invariance with non-linear deep feature extraction.",
         "excerpts": [
             {
                 "citation": "He & Wu (2019), IEEE Transactions on Biomedical Engineering, Vol. 67, No. 2, pp. 399-410",
                 "section": "Section III.B: Euclidean Space Alignment Formulation",
                 "paragraph": "Paragraph 3",
-                "text": "Let X_i in R^{C x T} denote the i-th EEG trial of subject s, where C is the number of EEG channels and T is the number of time samples. The reference matrix R_s is defined as the arithmetic mean of the covariance matrices: R_s = (1/N_s) * sum_{i=1}^{N_s} (X_i * X_i^T). In Euclidean Alignment (EA), each trial is whitened via \\tilde{X}_i = R_s^{-1/2} * X_i. Consequently, the mean covariance matrix of the aligned trials becomes (1/N_s) * sum_{i=1}^{N_s} (\\tilde{X}_i * \\tilde{X}_i^T) = I_C, exactly the identity matrix. By aligning the covariance matrices of different subjects to the same reference identity matrix in Euclidean space, EA eliminates inter-subject spatial distributions shifts caused by skull impedance and volume conduction variations."
+                "text": "Let $\\mathbf{X}_i \\in \\mathbb{R}^{C \\times T}$ denote the $i$-th EEG trial of subject $s$, where $C$ is the number of EEG channels and $T$ is the number of time samples. The reference matrix $\\mathbf{R}_s$ is defined as the arithmetic mean of the covariance matrices: $$\\mathbf{R}_s = \\frac{1}{N_s} \\sum_{i=1}^{N_s} \\mathbf{X}_i \\mathbf{X}_i^\\top$$ In Euclidean Alignment (EA), each trial is whitened via $\\tilde{\\mathbf{X}}_i = \\mathbf{R}_s^{-1/2} \\mathbf{X}_i$. Consequently, the mean covariance matrix of the aligned trials becomes $$\\frac{1}{N_s} \\sum_{i=1}^{N_s} \\tilde{\\mathbf{X}}_i \\tilde{\\mathbf{X}}_i^\\top = \\mathbf{I}_C$$ exactly the identity matrix. By aligning the covariance matrices of different subjects to the same reference identity matrix in Euclidean space, EA eliminates inter-subject spatial distributions shifts caused by skull impedance and volume conduction variations."
             },
             {
                 "citation": "He & Wu (2019), IEEE Transactions on Biomedical Engineering, Vol. 67, No. 2, pp. 399-410",
                 "section": "Section IV.A: Tangent Space Projection & Classification",
                 "paragraph": "Paragraph 5",
-                "text": "After Euclidean Alignment, the covariance matrix C_i = \\tilde{X}_i * \\tilde{X}_i^T lies on the Riemannian manifold of Symmetric Positive Definite (SPD) matrices. Projecting C_i to the Riemannian Tangent Space at the Fréchet mean identity matrix yields a Euclidean vector representation: s_i = upper(logm(C_i)), of dimensionality C(C+1)/2. Because the reference matrices have already been centered at I_C across all subjects, cross-subject transfer learning can be performed directly using a standard linear classifier without requiring labeled calibration trials from unseen target subjects."
+                "text": "After Euclidean Alignment, the covariance matrix $\\mathbf{C}_i = \\tilde{\\mathbf{X}}_i \\tilde{\\mathbf{X}}_i^\\top$ lies on the Riemannian manifold of Symmetric Positive Definite (SPD) matrices. Projecting $\\mathbf{C}_i$ to the Riemannian Tangent Space at the Fréchet mean identity matrix yields a Euclidean vector representation: $$\\mathbf{s}_i = \\mathrm{upper}(\\mathrm{logm}(\\mathbf{C}_i))$$ of dimensionality $C(C+1)/2$. Because the reference matrices have already been centered at $\\mathbf{I}_C$ across all subjects, cross-subject transfer learning can be performed directly using a standard linear classifier without requiring labeled calibration trials from unseen target subjects."
             }
         ]
     },
@@ -114,10 +114,10 @@ FOUNDATIONAL_3_PAPERS = [
         "paradigm": "End-to-End Deep Learning",
         "fit_rationale": "Compact parameter budget (<3,000 parameters) specifically designed to prevent overfitting on small EEG sample sizes. Uses temporal convolutions to learn frequency filter bands (8-30 Hz) and depthwise spatial convolutions to learn optimal spatial filter combinations across motor channels (analogous to Common Spatial Patterns).",
         "adaptation_steps": [
-            "Format input tensor to shape (batch_size, 1, n_channels=8, n_samples=500).",
-            "Set temporal kernel size to 64 (representing ~250ms receptive field at 250 Hz sampling rate).",
-            "Apply spatial dropout (p=0.25) to prevent co-adaptation of specific electrode pairs.",
-            "Standardize z-score normalization per trial channel-wise."
+            "Format input tensor to shape $(\\mathrm{batch\\_size},\\, 1,\\, C=8,\\, T=500)$.",
+            "Set temporal kernel size to $K=64$ (representing $\\approx 250\\,\\mathrm{ms}$ receptive field at $250\\,\\mathrm{Hz}$ sampling rate).",
+            "Apply spatial dropout ($p=0.25$) to prevent co-adaptation of specific electrode pairs.",
+            "Standardize $z$-score normalization per trial channel-wise: $\\mathbf{X}_{\\mathrm{norm}} = (\\mathbf{X} - \\mu) / (\\sigma + \\epsilon)$."
         ],
         "unique_suggestion": "Channel Attention Spatial Gating: Add a Squeeze-and-Excitation (SE) block across the depthwise spatial filters. This dynamically upweights contralateral motor channels (C3/C4) during active motor attempts while suppressing noise from frontal and occipital electrodes.",
         "excerpts": [
@@ -125,13 +125,13 @@ FOUNDATIONAL_3_PAPERS = [
                 "citation": "Lawhern et al. (2018), Journal of Neural Engineering, Vol. 15, No. 5, 056013",
                 "section": "Section 2.2: EEGNet Architecture and Convolutional Stages",
                 "paragraph": "Paragraph 2",
-                "text": "EEGNet introduces depthwise and separable convolutions to parameterize temporal and spatial EEG features with minimal weights (<3,000 parameters). The temporal convolution stage applies F_1 1D filters of size (1, K) along the time axis, where K is set to half the sampling rate (e.g. K=125 samples at 250 Hz) to capture frequency filters starting from 2 Hz up to the Nyquist limit. Immediately following temporal filtering, a depthwise convolution with kernel size (C, 1) computes spatial filters across all C channels for each temporal feature map individually. This decoupling allows the model to learn frequency-specific spatial projections analogous to Common Spatial Patterns (CSP)."
+                "text": "EEGNet introduces depthwise and separable convolutions to parameterize temporal and spatial EEG features with minimal weights (<3,000 parameters). The temporal convolution stage applies $F_1$ 1D filters of size $(1, K)$ along the time axis, where $K$ is set to half the sampling rate (e.g. $K=125$ samples at $250\\,\\mathrm{Hz}$) to capture frequency filters starting from $2\\,\\mathrm{Hz}$ up to the Nyquist limit. Immediately following temporal filtering, a depthwise convolution with kernel size $(C, 1)$ computes spatial filters across all $C$ channels for each temporal feature map individually. This decoupling allows the model to learn frequency-specific spatial projections analogous to Common Spatial Patterns (CSP)."
             },
             {
                 "citation": "Lawhern et al. (2018), Journal of Neural Engineering, Vol. 15, No. 5, 056013",
                 "section": "Section 2.3: Regularization and Low-Channel Constraints",
                 "paragraph": "Paragraph 4",
-                "text": "To prevent overfitting on small BCI cohorts with high variance, EEGNet incorporates spatial dropout (p = 0.25) directly following the depthwise spatial convolution layer. Spatial dropout drops entire 2D feature maps rather than individual elements, preventing adjacent temporal activations from co-adapting. Pointwise convolutions (1x1) then linearly combine the spatial outputs, followed by average pooling (8x) and classification via softmax. This architecture ensures high generalizability when channel counts are limited to 8 electrodes."
+                "text": "To prevent overfitting on small BCI cohorts with high variance, EEGNet incorporates spatial dropout ($p = 0.25$) directly following the depthwise spatial convolution layer. Spatial dropout drops entire 2D feature maps rather than individual elements, preventing adjacent temporal activations from co-adapting. Pointwise convolutions ($1 \\times 1$) then linearly combine the spatial outputs, followed by average pooling ($8\\times$) and classification via softmax. This architecture ensures high generalizability when channel counts are limited to 8 electrodes."
             }
         ]
     },
@@ -146,20 +146,20 @@ FOUNDATIONAL_3_PAPERS = [
         "github_url": "https://github.com/braindecode/braindecode",
         "method_name": "ShallowFBCSPNet",
         "paradigm": "Energy-Pooling Temporal-Spatial CNN",
-        "fit_rationale": "Explicitly mimics the neurophysiological Filter Bank Common Spatial Pattern (FBCSP) algorithm in a trainable deep network. Uses squaring non-linearities (x^2) followed by mean pooling and logarithmic transformation, directly modeling Event-Related Desynchronization (ERD) power suppression during movement intent.",
+        "fit_rationale": "Explicitly mimics the neurophysiological Filter Bank Common Spatial Pattern (FBCSP) algorithm in a trainable deep network. Uses squaring non-linearities ($x^2$) followed by mean pooling and logarithmic transformation, directly modeling Event-Related Desynchronization (ERD) power suppression during movement intent.",
         "adaptation_steps": [
-            "Resample continuous LSL streams to 250 Hz with 2.0 to 4.0-second epochs.",
-            "Tune temporal filter length to 25 samples and spatial filter count to 40.",
-            "Apply logarithmic pooling clamp: log(max(x, 1e-5)) to avoid numerical instability on near-zero power trials.",
+            "Resample continuous LSL streams to $250\\,\\mathrm{Hz}$ with $2.0$ to $4.0$-second epochs ($T=500$ samples).",
+            "Tune temporal filter length to $K=25$ samples and spatial filter count to $F=40$.",
+            "Apply logarithmic pooling clamp: $x \\mapsto \\log(\\max(x^2, 10^{-5}))$ to avoid numerical instability on near-zero power trials.",
             "Use AdamW optimizer with cosine learning rate schedule."
         ],
-        "unique_suggestion": "Multi-Scale Temporal Dilation: Replace the single temporal convolution with parallel multi-scale dilated convolutions (kernel rates 1, 2, 4) to capture both high-frequency beta bursts (18-24 Hz) and slower mu rhythm dynamics (8-12 Hz) simultaneously.",
+        "unique_suggestion": "Multi-Scale Temporal Dilation: Replace the single temporal convolution with parallel multi-scale dilated convolutions (kernel rates 1, 2, 4) to capture both high-frequency beta bursts ($18\\text{--}24\\,\\mathrm{Hz}$) and slower mu rhythm dynamics ($8\\text{--}12\\,\\mathrm{Hz}$) simultaneously.",
         "excerpts": [
             {
                 "citation": "Schirrmeister et al. (2017), Human Brain Mapping, Vol. 38, No. 11, pp. 5391-5420",
                 "section": "Section 3.1: Shallow ConvNet Architecture and Power Pooling",
                 "paragraph": "Paragraph 4",
-                "text": "The Shallow ConvNet architecture is explicitly inspired by Filter Bank Common Spatial Patterns (FBCSP). The first two layers perform temporal convolution (kernel length 25) and spatial filtering across all C channels (kernel size C x 1, with 40 spatial filters). The distinctive property of Shallow ConvNet is its non-linear activation function: a squaring function f(x) = x^2, followed by mean pooling over a temporal window of 75 samples with stride 15, and finally a logarithmic activation f(x) = log(max(x, 1e-5)). This sequence directly computes the log-bandpower of the spatially filtered EEG signals, mimicking the energy computation in FBCSP."
+                "text": "The Shallow ConvNet architecture is explicitly inspired by Filter Bank Common Spatial Patterns (FBCSP). The first two layers perform temporal convolution (kernel length 25) and spatial filtering across all $C$ channels (kernel size $C \\times 1$, with 40 spatial filters). The distinctive property of Shallow ConvNet is its non-linear activation function: a squaring function $f(x) = x^2$, followed by mean pooling over a temporal window of 75 samples with stride 15, and finally a logarithmic activation $f(x) = \\log(\\max(x^2, 10^{-5}))$. This sequence directly computes the log-bandpower of the spatially filtered EEG signals, mimicking the energy computation in FBCSP."
             },
             {
                 "citation": "Schirrmeister et al. (2017), Human Brain Mapping, Vol. 38, No. 11, pp. 5391-5420",
@@ -396,7 +396,8 @@ async def chat_copilot(req: ChatMessage):
         "2. State your response with high scientific clarity and directness. Every technical mechanism or design choice MUST cite the paper authors in parentheses e.g. (He & Wu 2019) or (Lawhern et al. 2018).\n"
         "3. YOU MUST ALWAYS CONCLUDE YOUR RESPONSE WITH A SECTION TITLED EXACTLY:\n"
         "### 📌 Grounded Citations & Verbatim Paragraphs\n"
-        "Under this section, list the exact quotation, section heading, paragraph number, and citation for each paper you referenced, quoting word-for-word from the 'Grounded Source Paragraphs' provided in the context.\n\n"
+        "Under this section, list the exact quotation, section heading, paragraph number, and citation for each paper you referenced, quoting word-for-word from the 'Grounded Source Paragraphs' provided in the context.\n"
+        "4. MATHEMATICAL FORMULAS: Format all equations, matrix operations, and mathematical symbols using clean LaTeX notation with single dollar signs for inline math (e.g., $\\bar{\\mathbf{R}} = \\frac{1}{N}\\sum_{i=1}^N \\mathbf{X}_i \\mathbf{X}_i^\\top$ and $\\bar{\\mathbf{R}}^{-1/2}$) and double dollar signs for standalone display equations. Never write plain ASCII fractions or unformatted powers like 'R_bar = mean(X_i * X_i^T)'.\n\n"
         f"=== ACTIVE DATASET SPECIFICATIONS ===\n{active_dataset_str}\n\n"
         f"=== ACTIVE SYNTHESIZED RESEARCH PAPERS ===\n{active_papers_str}\n"
     )

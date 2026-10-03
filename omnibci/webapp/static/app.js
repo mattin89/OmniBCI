@@ -186,6 +186,137 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBenchmarkBtnState();
   }
 
+  // -------------------------------------------------------------
+  // Scientific Math Formatting Engine (KaTeX + Robust Fallback)
+  // -------------------------------------------------------------
+  function prettifyMathText(text) {
+    if (!text || typeof text !== 'string') return text;
+
+    let t = text;
+
+    // 1. Specific phrase highlighted by user: R_bar = mean(X_i * X_i^T) and whiten trials with R_bar^(-1/2)
+    t = t.replace(/R_bar\s*=\s*(?:mean|average)\s*\(\s*X_i\s*\*?\s*X_i\^T\s*\)/gi, '$\\bar{\\mathbf{R}} = \\frac{1}{N}\\sum_{i=1}^N \\mathbf{X}_i \\mathbf{X}_i^\\top$');
+    t = t.replace(/R_bar\s*=\s*mean\s*\(\s*X_i\s*\*\s*X_i\^T\s*\)/gi, '$\\bar{\\mathbf{R}} = \\frac{1}{N}\\sum_{i=1}^N \\mathbf{X}_i \\mathbf{X}_i^\\top$');
+
+    // 2. Exponent forms: R_bar^(-1/2), R_s^(-1/2)
+    t = t.replace(/R_bar\^\(-1\/2\)/gi, '$\\bar{\\mathbf{R}}^{-1/2}$');
+    t = t.replace(/R_s\^\(-1\/2\)/g, '$\\mathbf{R}_s^{-1/2}$');
+    t = t.replace(/\\?tilde\{X\}_i\s*=\s*R_s\^\{?-1\/2\}?\s*\*?\s*X_i/g, '$\\tilde{\\mathbf{X}}_i = \\mathbf{R}_s^{-1/2} \\mathbf{X}_i$');
+    t = t.replace(/\\?tilde\{X\}_i\s*=\s*\\bar\{R\}\^\{?-1\/2\}?\s*\*?\s*X_i/g, '$\\tilde{\\mathbf{X}}_i = \\bar{\\mathbf{R}}^{-1/2} \\mathbf{X}_i$');
+
+    // 3. Covariance arithmetic mean equation
+    t = t.replace(/R_s\s*=\s*\(1\/N_s\)\s*\*?\s*sum_\{i=1\}\^\{N_s\}\s*\(X_i\s*\*?\s*X_i\^T\)/g, '$$\\mathbf{R}_s = \\frac{1}{N_s} \\sum_{i=1}^{N_s} \\mathbf{X}_i \\mathbf{X}_i^\\top$$');
+    t = t.replace(/\(1\/N_s\)\s*\*?\s*sum_\{i=1\}\^\{N_s\}\s*\(\\?tilde\{X\}_i\s*\*?\s*\\?tilde\{X\}_i\^T\)\s*=\s*I_C/g, '$$\\frac{1}{N_s} \\sum_{i=1}^{N_s} \\tilde{\\mathbf{X}}_i \\tilde{\\mathbf{X}}_i^\\top = \\mathbf{I}_C$$');
+
+    // 4. Matrix spaces & tangent projections
+    t = t.replace(/X_i\s+in\s+R\^\{?C\s*x\s*T\}?/g, '$\\mathbf{X}_i \\in \\mathbb{R}^{C \\times T}$');
+    t = t.replace(/C_i\s*=\s*\\?tilde\{X\}_i\s*\*?\s*\\?tilde\{X\}_i\^T/g, '$\\mathbf{C}_i = \\tilde{\\mathbf{X}}_i \\tilde{\\mathbf{X}}_i^\\top$');
+    t = t.replace(/s_i\s*=\s*upper\(logm\(C_i\)\)/g, '$\\mathbf{s}_i = \\mathrm{upper}(\\mathrm{logm}(\\mathbf{C}_i))$');
+    t = t.replace(/\bC\(C\+1\)\/2\b/g, '$C(C+1)/2$');
+
+    // 5. CNN equations: log(max(x, 1e-5)), x^2 -> log pool
+    t = t.replace(/log\(max\(x,\s*1e-5\)\)/gi, '$\\log(\\max(x^2, 10^{-5}))$');
+    t = t.replace(/x\^2\s*->\s*log\s*pool/gi, '$x^2 \\to \\log(\\mathrm{pool})$');
+
+    // 6. R_bar standalone symbol
+    t = t.replace(/\bR_bar\b/g, '$\\bar{\\mathbf{R}}$');
+
+    return t;
+  }
+
+  function renderMathInDOM(container) {
+    if (!container) return;
+    if (window.renderMathInElement) {
+      try {
+        window.renderMathInElement(container, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+            { left: '\\[', right: '\\]', display: true },
+            { left: '\\(', right: '\\)', display: false }
+          ],
+          throwOnError: false,
+          ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        });
+        return;
+      } catch (e) {
+        console.warn('KaTeX auto-render fallback:', e);
+      }
+    }
+    // Fallback if KaTeX is unavailable
+    fallbackMathRender(container);
+  }
+
+  function fallbackMathRender(container) {
+    if (!container) return;
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+    const textNodes = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      if (node.parentElement && !['SCRIPT', 'STYLE', 'PRE', 'CODE'].includes(node.parentElement.tagName)) {
+        if (node.nodeValue.includes('$')) {
+          textNodes.push(node);
+        }
+      }
+    }
+
+    textNodes.forEach(tNode => {
+      const parent = tNode.parentNode;
+      if (!parent) return;
+      const val = tNode.nodeValue;
+      if (!val.includes('$')) return;
+
+      const span = document.createElement('span');
+      // Format $$ display math $$
+      let replaced = val.replace(/\$\$([\s\S]*?)\$\$/g, (_, eq) => {
+        return `<span class="math-display">${formatRawMathSnippet(eq)}</span>`;
+      });
+      // Format $ inline math $
+      replaced = replaced.replace(/\$([^\$\n]+?)\$/g, (_, eq) => {
+        return `<span class="math-inline">${formatRawMathSnippet(eq)}</span>`;
+      });
+      span.innerHTML = replaced;
+      parent.replaceChild(span, tNode);
+    });
+  }
+
+  function formatRawMathSnippet(eq) {
+    let s = eq.trim();
+    s = s.replace(/\\bar\{\\mathbf\{R\}\}/g, '<span class="math-bar"><strong>R</strong></span>');
+    s = s.replace(/\\bar\{R\}/g, '<span class="math-bar"><em>R</em></span>');
+    s = s.replace(/\\mathbf\{([A-Za-z]+)\}/g, '<strong>$1</strong>');
+    s = s.replace(/\\tilde\{<strong>X<\/strong>\}_i/g, '<span style="text-decoration: overline;"><strong>X</strong></span><sub>i</sub>');
+    s = s.replace(/\\tilde\{\\mathbf\{X\}\}_i/g, '<span style="text-decoration: overline;"><strong>X</strong></span><sub>i</sub>');
+    s = s.replace(/\\tilde\{X\}_i/g, '<span style="text-decoration: overline;"><em>X</em></span><sub>i</sub>');
+    s = s.replace(/\\frac\{1\}\{N\}/g, '<span class="math-frac"><sup>1</sup>/<sub>N</sub></span>');
+    s = s.replace(/\\frac\{1\}\{N_s\}/g, '<span class="math-frac"><sup>1</sup>/<sub>N<sub>s</sub></sub></span>');
+    s = s.replace(/\\sum_\{i=1\}\^N/g, '&sum;<sub>i=1</sub><sup>N</sup>');
+    s = s.replace(/\\sum_\{i=1\}\^\{N_s\}/g, '&sum;<sub>i=1</sub><sup>N<sub>s</sub></sup>');
+    s = s.replace(/\\sum/g, '&sum;');
+    s = s.replace(/\\in/g, '&isin;');
+    s = s.replace(/\\mathbb\{R\}\^\{C \\times T\}/g, '&#8477;<sup>C &times; T</sup>');
+    s = s.replace(/\\times/g, '&times;');
+    s = s.replace(/\\top/g, 'T');
+    s = s.replace(/\^\\top/g, '<sup>T</sup>');
+    s = s.replace(/\^T/g, '<sup>T</sup>');
+    s = s.replace(/\^\{\\top\}/g, '<sup>T</sup>');
+    s = s.replace(/\^\{-1\/2\}/g, '<sup>&minus;1/2</sup>');
+    s = s.replace(/\^-1\/2/g, '<sup>&minus;1/2</sup>');
+    s = s.replace(/_i/g, '<sub>i</sub>');
+    s = s.replace(/_s/g, '<sub>s</sub>');
+    s = s.replace(/_C/g, '<sub>C</sub>');
+    s = s.replace(/\\mu/g, '&mu;');
+    s = s.replace(/\\beta/g, '&beta;');
+    s = s.replace(/\\sigma/g, '&sigma;');
+    s = s.replace(/\\epsilon/g, '&epsilon;');
+    s = s.replace(/\\log/g, 'log');
+    s = s.replace(/\\max/g, 'max');
+    s = s.replace(/\\mathrm\{upper\}/g, 'upper');
+    s = s.replace(/\\mathrm\{logm\}/g, 'logm');
+    s = s.replace(/\\to/g, '&rarr;');
+    return s;
+  }
+
   // Render Paper Cards with Collapsible Dropdowns and Delete Buttons
   function renderPaperCards(papers) {
     papersList.innerHTML = '';
@@ -194,8 +325,8 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'paper-card';
 
       const adaptationItems = Array.isArray(paper.adaptation_steps)
-        ? paper.adaptation_steps.map(s => `<li>${s}</li>`).join('')
-        : `<li>${paper.adaptation_steps}</li>`;
+        ? paper.adaptation_steps.map(s => `<li>${prettifyMathText(s)}</li>`).join('')
+        : `<li>${prettifyMathText(paper.adaptation_steps)}</li>`;
 
       card.innerHTML = `
         <div class="paper-card-header" data-idx="${idx}">
@@ -218,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="paper-dropdown" id="dropdown-${idx}" style="display: none;">
           <div class="dropdown-section">
             <h4>🎯 Why This Paper Fits</h4>
-            <p>${paper.fit_rationale}</p>
+            <p>${prettifyMathText(paper.fit_rationale)}</p>
           </div>
 
           <div class="dropdown-section">
@@ -229,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="dropdown-section">
             <h4>💡 Unique Suggestion & Feature Fusion</h4>
             <div class="highlight-box">
-              <p>${paper.unique_suggestion}</p>
+              <p>${prettifyMathText(paper.unique_suggestion)}</p>
             </div>
           </div>
         </div>
@@ -244,6 +375,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const isOpen = dropdown.style.display === 'flex';
         dropdown.style.display = isOpen ? 'none' : 'flex';
         arrow.textContent = isOpen ? '▼' : '▲';
+        if (!isOpen) {
+          renderMathInDOM(dropdown);
+        }
       });
 
       // Delete paper handler
@@ -269,6 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       papersList.appendChild(card);
+      renderMathInDOM(card);
     });
   }
 
@@ -278,8 +413,11 @@ document.addEventListener('DOMContentLoaded', () => {
     bubble.className = `chat-bubble ${sender === 'user' ? 'user-bubble' : 'bot-bubble'}`;
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+    // Format math formulas before line break conversions
+    const processedText = prettifyMathText(text);
+
     // Format blockquotes and citations cleanly
-    let formattedText = text
+    let formattedText = processedText
       .replace(/### (.*?)\n/g, '<h4 style="color: var(--accent-cyan); margin: 0.6rem 0 0.3rem 0; font-size: 0.88rem;">$1</h4>')
       .replace(/> (.*?)\n/g, '<blockquote style="border-left: 3px solid var(--accent-cyan); background: rgba(6,182,212,0.06); padding: 0.35rem 0.65rem; margin: 0.4rem 0; font-style: italic; font-size: 0.8rem;">$1</blockquote>')
       .replace(/\n/g, '<br/>');
@@ -292,6 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="bubble-body">${formattedText}</div>
     `;
     chatStream.appendChild(bubble);
+    renderMathInDOM(bubble);
     chatStream.scrollTop = chatStream.scrollHeight;
   }
 
@@ -860,11 +999,11 @@ document.addEventListener('DOMContentLoaded', () => {
         fit_rationale: "Resolves inter-subject domain shifts on low-density wearable EEG. Euclidean Alignment centers all subject covariance matrices to the identity matrix on the Riemannian manifold.",
         adaptation_steps: [
           "Harmonize channel montage to standard 10-20 motor electrodes (Fz, C3, Cz, C4, PO7, Pz, PO8, Oz)",
-          "Apply 8-30 Hz Butterworth bandpass filtering",
-          "Compute per-subject reference covariance R_bar and whiten trials with R_bar^(-1/2)",
-          "Project whitened covariance matrices to Euclidean Tangent Space"
+          "Apply zero-phase 8–30 Hz Butterworth bandpass filtering to isolate sensorimotor $\\mu$ and $\\beta$ rhythms",
+          "Estimate per-subject reference covariance matrix $\\bar{\\mathbf{R}} = \\frac{1}{N}\\sum_{i=1}^N \\mathbf{X}_i \\mathbf{X}_i^\\top$ and whiten trials via $\\tilde{\\mathbf{X}}_i = \\bar{\\mathbf{R}}^{-1/2} \\mathbf{X}_i$",
+          "Project whitened covariance matrices to Euclidean Tangent Space $\\mathbf{s}_i = \\mathrm{upper}(\\mathrm{logm}(\\mathbf{C}_i))$ at Fréchet mean identity $\\mathbf{I}_C$"
         ],
-        unique_suggestion: "Hybrid EA-EEGNet: Pre-whiten trials with Euclidean Alignment before feeding into EEGNet temporal convolutions."
+        unique_suggestion: "Hybrid EA-EEGNet: Use Euclidean Alignment $\\tilde{\\mathbf{X}} = \\bar{\\mathbf{R}}^{-1/2}\\mathbf{X}$ as a differentiable spatial whitening front-end before feeding epochs into EEGNet temporal convolutions."
       },
       {
         paper_id: "paper_lawhern_2018",
@@ -876,9 +1015,10 @@ document.addEventListener('DOMContentLoaded', () => {
         github_url: "https://github.com/vlawhern/arl-eegmodels",
         fit_rationale: "Compact parameter budget (<3,000 parameters) specifically designed to prevent overfitting on small EEG sample sizes with depthwise spatial filters.",
         adaptation_steps: [
-          "Format input tensor to shape (batch_size, 1, n_channels=8, n_samples=500)",
-          "Temporal kernel length 64 (~250ms at 250 Hz)",
-          "Apply spatial dropout (p=0.25)"
+          "Format input tensor to shape $(\\mathrm{batch\\_size},\\, 1,\\, C=8,\\, T=500)$",
+          "Set temporal kernel size to $K=64$ (representing $\\approx 250\\,\\mathrm{ms}$ receptive field at $250\\,\\mathrm{Hz}$)",
+          "Apply spatial dropout ($p=0.25$) to prevent co-adaptation of electrode pairs",
+          "Standardize $z$-score normalization per trial channel-wise: $\\mathbf{X}_{\\mathrm{norm}} = (\\mathbf{X} - \\mu) / (\\sigma + \\epsilon)$"
         ],
         unique_suggestion: "Channel Attention Spatial Gating: Add a Squeeze-and-Excitation block across depthwise filters."
       },
@@ -892,11 +1032,12 @@ document.addEventListener('DOMContentLoaded', () => {
         github_url: "https://github.com/braindecode/braindecode",
         fit_rationale: "Mimics Filter Bank Common Spatial Patterns with bandpower pooling (x^2 -> log pool) to model ERD.",
         adaptation_steps: [
-          "Resample continuous LSL streams to 250 Hz with 2.0s epochs",
-          "Temporal filter length 25 samples and spatial filter count 40",
-          "Logarithmic clamp log(max(x, 1e-5))"
+          "Resample continuous LSL streams to $250\\,\\mathrm{Hz}$ with $2.0\\,\\mathrm{s}$ epochs ($T=500$ samples)",
+          "Tune temporal filter length to $K=25$ samples and spatial filter count to $F=40$",
+          "Apply logarithmic pooling clamp: $x \\mapsto \\log(\\max(x^2, 10^{-5}))$ to avoid numerical instability on near-zero power trials",
+          "Use AdamW optimizer with cosine learning rate schedule"
         ],
-        unique_suggestion: "Multi-Scale Temporal Dilation: Parallel multi-scale dilated convolutions for beta and mu rhythms."
+        unique_suggestion: "Multi-Scale Temporal Dilation: Parallel multi-scale dilated convolutions to simultaneously model both high-frequency $\\beta$ bursts ($18\\text{--}24\\,\\mathrm{Hz}$) and slower $\\mu$ dynamics ($8\\text{--}12\\,\\mathrm{Hz}$)."
       }
     ];
   }

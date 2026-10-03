@@ -994,4 +994,108 @@ body {
   border-radius: 0 4px 4px 0;
 }
 
+/* ==========================================================================
+   Scientific Mathematics & Equation Typography (KaTeX + Fallback Engine)
+   ========================================================================== */
+.math-tex, .math-block, .math-inline {
+  font-family: 'KaTeX_Main', 'Cambria Math', 'Latin Modern Math', 'Times New Roman', serif;
+  letter-spacing: 0.01em;
+}
+
+.math-inline {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(6, 182, 212, 0.09);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 4px;
+  padding: 0.08rem 0.4rem;
+  margin: 0 0.2rem;
+  color: #a5f3fc;
+  font-size: 0.94em;
+  line-height: 1.25;
+  vertical-align: middle;
+}
+
+.math-display {
+  display: block;
+  text-align: center;
+  margin: 0.8rem 0;
+  padding: 0.75rem 1rem;
+  background: rgba(17, 24, 39, 0.75);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  border-radius: 6px;
+  color: #e0f2fe;
+  font-size: 1.05rem;
+  overflow-x: auto;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.math-bar {
+  text-decoration: overline;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.math-mat, .math-vec {
+  font-weight: bold;
+  font-style: normal;
+  color: #38bdf8;
+}
+
+.math-var {
+  font-style: italic;
+  font-family: 'KaTeX_Math', 'Cambria Math', serif;
+}
+
+.math-op {
+  font-style: normal;
+  color: #93c5fd;
+  margin: 0 0.15rem;
+}
+
+.math-frac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  font-size: 0.85em;
+  text-align: center;
+  line-height: 1;
+  margin: 0 0.15rem;
+}
+
+.math-frac sup {
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 1px;
+}
+
+.math-frac sub {
+  padding-top: 1px;
+}
+
+/* KaTeX Dark Theme Overrides */
+.katex {
+  font-size: 1.05em !important;
+  color: #e0f2fe;
+  line-height: 1.2;
+}
+
+.katex-display {
+  margin: 0.65rem 0 !important;
+  background: rgba(15, 23, 42, 0.8) !important;
+  padding: 0.65rem 1rem !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(59, 130, 246, 0.25) !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+.paper-dropdown ul li .katex {
+  font-size: 1.0em !important;
+}
+
+.paper-dropdown ul li {
+  margin-bottom: 0.45rem;
+  line-height: 1.55;
+}
+
 
