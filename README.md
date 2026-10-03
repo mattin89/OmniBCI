@@ -3,7 +3,6 @@
 [![Hack-Nation Challenge 03](https://img.shields.io/badge/Hack--Nation-Challenge%2003%20Agentic%20Discovery-blue.svg)](https://hack-nation.com)
 [![Render Live App](https://img.shields.io/badge/Render-Live%20App%20(Active)-46E3B7.svg?logo=render&logoColor=white)](https://omnibci.onrender.com)
 [![GitHub Pages Demo](https://img.shields.io/badge/GitHub%20Pages-Live%20Demo-brightgreen.svg)](https://mattin89.github.io/OmniBCI/)
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/mattin89/OmniBCI)
 [![Kaggle Benchmark](https://img.shields.io/badge/Kaggle-UK%20BCI%20Consortium%20(17%20Subjects)-20BEFF.svg)](https://www.kaggle.com/competitions/low-cost-motor-imagery-decoding-for-rehab-cross-subject)
 [![ScaDS.AI Llama-3.3-70B](https://img.shields.io/badge/ScaDS.AI-Llama--3.3--70B%20Inference-green.svg)](https://scads.ai)
 [![Paper2Agent Synthesis](https://img.shields.io/badge/Framework-Stanford%20Paper2Agent-cyan.svg)](https://github.com/jmiao24/Paper2Agent)
@@ -24,9 +23,9 @@ This project was developed for **Hack-Nation's 7th Global AI Hackathon** (organi
 
 $$\text{Question} \longrightarrow \text{Evidence} \longrightarrow \text{Hypothesis} \longrightarrow \text{Experiment} \longrightarrow \text{Result} \longrightarrow \text{Updated Decision}$$
 
-In conventional computational neuroscience, moving from a published paper to a verified clinical pipeline consumes weeks or months of manual engineering. Researchers must read dense mathematical formulations, locate public GitHub repositories, resolve abandoned dependencies, match sampling rates and electrode layouts, write validation code, and tune training loops for individual subjects.
+In conventional computational neuroscience, moving from an idea to a verified clinical pipeline consumes weeks or months of manual engineering. Researchers must read dense mathematical formulations, locate public GitHub repositories, resolve abandoned dependencies, match sampling rates and electrode layouts, write validation code, and tune training loops for individual subjects.
 
-**OmniBCI eliminates this friction.** By integrating Databricks Omnigent with an interactive conversational co-pilot, tasks that previously took weeks or months execute in **minutes**. 
+**OmniBCI eliminates this friction.** By integrating Databricks Omnigent with an interactive conversational co-pilot, tasks that previously took weeks or months execute in **minutes** ($4,320\times$ acceleration across a standard 30-day investigation cycle). 
 
 ### Zero-Code Scientific Exploration
 Researchers, clinicians, and assistive device builders do not need programming expertise or deep machine learning math to discover, apply, test, and improve EEG decoding pipelines:
@@ -211,69 +210,30 @@ This repository contains all official competition artifacts for Hack-Nation Chal
 
 ---
 
-## 8. Quickstart & Local Installation
+## 8. Live Deployments & Cloud Hosting
 
-You can run OmniBCI locally without spending API tokens. The application includes cached demonstration pipelines and pre-computed 17-subject benchmark evaluations.
+OmniBCI is deployed and publicly accessible across both server-backed and static environments:
 
-### Prerequisites
-* Python 3.10 or higher
-* Recommended: [`uv`](https://github.com/astral-sh/uv) for fast package resolution
+* 🚀 **Live Production App (Render)**: **[https://omnibci.onrender.com](https://omnibci.onrender.com)**  
+  Full-stack deployment hosting the FastAPI backend, active API endpoints, ScaDS.AI reasoning, and the interactive workstation.
+* 🌐 **Static Interactive Showcase (GitHub Pages)**: **[https://mattin89.github.io/OmniBCI/](https://mattin89.github.io/OmniBCI/)**  
+  Standalone zero-cost client demo running directly in the browser with pre-computed 17-fold benchmarks.
 
-### Installation
-
+### Local Execution Quickstart:
 ```bash
 # 1. Clone repository
 git clone https://github.com/mattin89/OmniBCI.git
 cd OmniBCI
 
-# 2. Create virtual environment and install dependencies
+# 2. Create environment & install dependencies
 uv venv
-.venv\Scripts\activate   # On Windows
-# source .venv/bin/activate # On Linux/macOS
-
+.venv\Scripts\activate   # On Windows (or source .venv/bin/activate on Linux/macOS)
 uv pip install -r requirements.txt
-```
 
-### Running the Web Application
-
-```bash
-# Launch the OmniBCI Co-Scientist server
+# 3. Launch OmniBCI
 python omnibci/webapp/app.py
 ```
-Open your browser at `http://127.0.0.1:8000`.
-
-### Replicating the Demo Flow:
-1. Click **Select Local Folder** on the right panel to scan the Kaggle dataset parameters (0 tokens consumed).
-2. Click **Import arXiv** and load preprint `https://arxiv.org/abs/2208.08860`.
-3. Click the suggestion chip: *"Analyze Intertwined Model for Kaggle"*.
-4. Watch the pipeline discover the two transfer learning papers, update the model catalog, and display verbatim citations.
-5. Click **Run Benchmark Locally** to inspect the 17-subject leaderboard, view comparative charts, and follow the streaming execution in the embedded JupyterLab panel below.
-
-### Cloud Deployment on Render
-
-> [!TIP]
-> **Live Production Deployment**: OmniBCI is deployed and live on Render at **[https://omnibci.onrender.com](https://omnibci.onrender.com)**.
-
-This repository includes a `render.yaml` blueprint specification and a containerized `Dockerfile`.
-
-#### Method A: 1-Click Blueprint
-1. Click the **Deploy to Render** badge at the top of this repository (or navigate to `https://render.com/deploy?repo=https://github.com/mattin89/OmniBCI`).
-2. Connect your GitHub account. Render automatically reads `render.yaml`.
-3. Input your private API keys (`SCADSAI_API_KEY`, `ANTHROPIC_API_KEY`). Render stores them in its encrypted vault; they are never exposed to clients or written to Git.
-4. Click **Apply**. Render installs dependencies from `requirements.txt` and publishes your live URL (`https://omnibci.onrender.com`).
-
-#### Method B: Manual Setup
-1. In the Render Dashboard, select **New +** $\rightarrow$ **Web Service**.
-2. Connect repository `mattin89/OmniBCI`.
-3. Set the following build and start parameters:
-   * **Runtime**: `Python`
-   * **Build Command**: `pip install -r requirements.txt`
-   * **Start Command**: `uvicorn omnibci.webapp.app:app --host 0.0.0.0 --port $PORT`
-4. Under **Environment Variables**, add:
-   * `PYTHON_VERSION`: `3.11.9`
-   * `SCADSAI_API_KEY`: *(Your private ScaDS.AI key)*
-   * `ANTHROPIC_API_KEY`: *(Optional Claude key)*
-5. Click **Deploy Web Service**.
+Open `http://127.0.0.1:8000` in your browser.
 
 ---
 
