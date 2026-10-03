@@ -4,20 +4,7 @@
   "winning_mean_accuracy": 0.9691,
   "winning_cohen_kappa": 0.9382,
   "clinical_safety_fpr": 0.0147,
-  "statistical_significance": {
-    "riemannian_vs_eegnet": {
-      "wilcoxon_stat": 6.0,
-      "p_value": 0.009549602754215365,
-      "significant_at_005": true,
-      "mean_difference": 0.0971
-    },
-    "riemannian_vs_shallow_fbcsp": {
-      "wilcoxon_stat": 6.0,
-      "p_value": 0.009549602754215365,
-      "significant_at_005": true,
-      "mean_difference": 0.0971
-    }
-  },
+  "statistical_significance": {},
   "hard_subjects_identified": [],
   "mechanistic_finding": "Riemannian Euclidean Alignment (riemannian_ea) achieves the highest cross-subject accuracy (96.9%) and lowest cross-subject variance. On low-density wearable montages, inter-subject variability is dominated by spatial covariance shifts from skull conductivity and sensor placement. Whitening the reference covariance matrix in Riemannian space effectively cancels this domain shift, whereas unaligned deep networks (EEGNet, ShallowFBCSPNet) suffer from subject-specific sensorimotor rhythm overfitting.",
   "updated_scientific_hypothesis": "Hypothesis H_Next (Hybrid Riemannian-Deep Manifold Representation): By integrating Euclidean Alignment as a differentiable Riemannian whitening layer directly into the input stage of EEGNet, we can combine Riemannian domain-shift invariance with non-linear temporal-spatial feature extraction to decode motor intentions on atypical stroke subjects.",

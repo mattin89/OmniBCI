@@ -191,6 +191,10 @@ class FolderScanRequest(BaseModel):
 class RemovePaperRequest(BaseModel):
     paper_id: str
 
+class ExperimentTriggerRequest(BaseModel):
+    hypothesis: Optional[str] = "Evaluate cross-subject motor intention decoding on low-cost wearable EEG"
+    models: Optional[List[str]] = ["riemannian_ea", "eegnet", "shallow_fbcsp"]
+
 @app.get("/api/state")
 async def get_state():
     return SESSION_STATE

@@ -18,6 +18,10 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--bg-dark);
@@ -115,14 +119,13 @@ body {
   grid-template-columns: 1fr 480px;
   gap: 1.25rem;
   padding: 1.25rem 1.75rem;
-  flex: 1;
-  overflow: hidden;
+  min-height: calc(100vh - 85px);
 }
 
 @media (max-width: 1100px) {
   .workstation-container {
     grid-template-columns: 1fr;
-    overflow-y: auto;
+    overflow-y: visible;
   }
 }
 
@@ -733,4 +736,262 @@ body {
   color: var(--text-muted);
   font-size: 0.78rem;
 }
+
+/* JupyterLab Live Execution Section */
+.jupyterlab-section {
+  background: #1e1e1e;
+  border-top: 2px solid #383838;
+  border-bottom: 1px solid #383838;
+  margin: 1.5rem 1.75rem 3.5rem;
+  border-radius: 8px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+.jlab-topbar {
+  background: #252526;
+  border-bottom: 1px solid #333;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.85rem;
+}
+
+.jlab-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 100%;
+}
+
+.jlab-tab {
+  background: #1e1e1e;
+  border-top: 2px solid var(--accent-cyan);
+  color: #fff;
+  font-size: 0.78rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.85rem;
+  font-weight: 500;
+}
+
+.jlab-tab-icon {
+  font-size: 0.85rem;
+}
+
+.jlab-tab-close {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.jlab-tab-close:hover {
+  opacity: 1;
+}
+
+.jlab-tab-plus {
+  color: #999;
+  font-size: 1rem;
+  padding: 0 0.4rem;
+  cursor: pointer;
+}
+
+.jlab-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.kernel-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: #ccc;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.kernel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.kernel-dot.busy {
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+  animation: pulse-kernel 1s infinite alternate;
+}
+
+@keyframes pulse-kernel {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+.jlab-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid #444;
+  color: #ddd;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.jlab-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.jlab-toolbar {
+  background: #2d2d2d;
+  border-bottom: 1px solid #383838;
+  padding: 0.35rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.jlab-tool-group {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.jlab-tool-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #ccc;
+  font-size: 0.82rem;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.jlab-tool-btn:hover {
+  background: #3e3e3e;
+  border-color: #555;
+  color: #fff;
+}
+
+.jlab-tool-separator {
+  width: 1px;
+  height: 18px;
+  background: #444;
+}
+
+.jlab-select {
+  background: #3c3c3c;
+  border: 1px solid #555;
+  color: #ddd;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+}
+
+.jlab-exec-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.74rem;
+  color: var(--accent-cyan);
+  margin-left: auto;
+}
+
+/* Notebook Cells */
+.jlab-notebook-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background: #1e1e1e;
+}
+
+.jlab-cell {
+  border-left: 3px solid transparent;
+  padding-left: 0.5rem;
+  transition: border-color 0.2s;
+}
+
+.jlab-cell.running {
+  border-left-color: var(--accent-cyan);
+}
+
+.jlab-cell.completed {
+  border-left-color: #388bfd;
+}
+
+.jlab-input-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.jlab-prompt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #388bfd;
+  width: 65px;
+  text-align: right;
+  flex-shrink: 0;
+  padding-top: 0.45rem;
+  user-select: none;
+}
+
+.jlab-cell.running .jlab-prompt {
+  color: #f59e0b;
+}
+
+.jlab-code-box {
+  flex: 1;
+  background: #181818;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 0.65rem 0.85rem;
+  overflow-x: auto;
+}
+
+.jlab-code-box pre {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #e6edf3;
+  margin: 0;
+}
+
+/* Syntax highlight */
+.jlab-code-box .c1 { color: #8b949e; font-style: italic; }
+.jlab-code-box .k { color: #ff7b72; font-weight: 600; }
+.jlab-code-box .nn { color: #79c0ff; }
+.jlab-code-box .n { color: #e6edf3; }
+.jlab-code-box .nb { color: #d2a8ff; }
+.jlab-code-box .s1, .jlab-code-box .s2 { color: #a5d6ff; }
+.jlab-code-box .o { color: #ff7b72; }
+.jlab-code-box .mi, .jlab-code-box .mf { color: #79c0ff; }
+.jlab-code-box .sa { color: #79c0ff; }
+.jlab-code-box .p { color: #e6edf3; }
+
+.jlab-output-row {
+  margin-left: 77px;
+  margin-top: 0.4rem;
+}
+
+.jlab-output-box {
+  background: #141414;
+  border-left: 2px solid #444;
+  padding: 0.65rem 0.85rem;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  border-radius: 0 4px 4px 0;
+}
+
 
