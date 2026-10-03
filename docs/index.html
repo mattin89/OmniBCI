@@ -9,41 +9,41 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Header -->
+  <!-- Top Navigation Header -->
   <header class="navbar">
     <div class="brand">
       <div class="logo-icon">Ψ</div>
       <div>
         <div class="title-row">
           <h1>OmniBCI Co-Pilot</h1>
-          <span class="live-pill"><span class="dot"></span> EEG ML/DL Assistant</span>
+          <span class="live-pill"><span class="dot"></span> EEG ML/DL Lab</span>
         </div>
-        <p class="subtitle">Agentic Discovery for EEG Decoding · Powered by Databricks Omnigent & Paper2Agent</p>
+        <p class="subtitle">Agentic Discovery for EEG Decoding · Powered by ScaDS.AI & Paper2Agent</p>
       </div>
     </div>
     
     <div class="nav-actions">
       <div class="active-engine-badge">
         <span class="engine-dot"></span>
-        <span id="activeEngineText">Claude 3.5 Active</span>
+        <span id="activeEngineText">ScaDS.AI Active (Zero-Cost Chat)</span>
       </div>
       <button class="btn btn-sm btn-outline" id="settingsBtn">⚙️ Engine Settings</button>
     </div>
   </header>
 
-  <!-- Main Chat & Discovery Workstation -->
+  <!-- Main Workstation Layout -->
   <main class="workstation-container">
-    <!-- Center: Conversational Co-Scientist Chat -->
+    <!-- Left Column: Conversational AI Co-Scientist Chat -->
     <section class="chat-section">
-      <!-- Quick Hypothesis Chips -->
+      <!-- Suggested Query Chips -->
       <div class="chips-bar">
         <span class="chips-title">Suggested Inquiries:</span>
+        <button class="chip" data-query="Find suitable DL and ML models from scientific papers for the Kaggle motor imagery dataset">Find Models for Kaggle</button>
         <button class="chip" data-query="How can we decode motor intention (rest vs move) on low-cost wearable EEG across unseen stroke rehab patients?">Stroke Rehab Cross-Subject</button>
-        <button class="chip" data-query="Compare Riemannian Euclidean Alignment vs EEGNet on the UK BCI Consortium Kaggle benchmark">Riemannian vs EEGNet</button>
         <button class="chip" data-query="How do we adapt 64-channel research models to an 8-channel low-density motor cortex montage?">8-Channel Adaptation</button>
       </div>
 
-      <!-- Chat Feed -->
+      <!-- Live Chat Stream -->
       <div class="chat-stream" id="chatStream">
         <div class="chat-bubble bot-bubble">
           <div class="bubble-header">
@@ -52,14 +52,14 @@
           </div>
           <div class="bubble-body">
             <p>Welcome to <strong>OmniBCI</strong>, your AI co-scientist for developing machine learning and deep learning pipelines for EEG applications.</p>
-            <p style="margin-top: 0.5rem;">State your hypothesis, clinical target, or research inquiry below. I will search peer-reviewed literature, match suitable datasets (or you can provide your own local folder/file), and use Stanford's <strong>Paper2Agent</strong> framework to synthesize active models. You can also upload your own research paper (PDF or arXiv link) to convert it into an agent.</p>
+            <p style="margin-top: 0.5rem;">To begin, select your local dataset folder on the right panel (or click <strong>"Select Local Folder"</strong>). I will analyze the dataset locally without consuming API tokens, identify suitable DL/ML architectures from peer-reviewed papers, and generate ready-to-run Jupyter Lab code.</p>
           </div>
         </div>
       </div>
 
-      <!-- Chat Input with Paper & Dataset Upload Tools -->
+      <!-- Input Bar with File / Paper Upload -->
       <div class="input-container">
-        <!-- Upload Bar -->
+        <!-- Attachment Indicator -->
         <div class="attachment-bar" id="attachmentBar" style="display: none;">
           <span class="attach-label" id="attachLabel">Attached Paper:</span>
           <span class="attach-name" id="attachName"></span>
@@ -75,55 +75,76 @@
             <button type="button" class="icon-btn" id="arxivBtn" title="Import via arXiv ID/URL">🔗</button>
           </div>
           
-          <input type="text" id="userInput" placeholder="Ask a hypothesis, request models, or query dataset adaptation..." value="Decode motor intention on low-cost wearable EEG across unseen stroke rehab subjects" />
+          <input type="text" id="userInput" placeholder="Ask a hypothesis or query (e.g. 'Find models for the Kaggle dataset')..." value="Find suitable DL and ML models from scientific papers for the Kaggle motor imagery dataset" />
           
           <button type="submit" class="btn btn-primary" id="sendBtn">Send</button>
         </form>
       </div>
     </section>
 
-    <!-- Right: Scientific Models, Dataset Inspector & Local Execution -->
+    <!-- Right Column: Dataset Inspector, Synthesized Models & Execution Toolbar -->
     <aside class="sidebar-section">
       <!-- Toolbar -->
       <div class="sidebar-toolbar">
-        <button class="btn btn-sm btn-accent" id="runBenchmarkBtn">⚡ Run Benchmark Locally</button>
+        <button class="btn btn-sm btn-accent" id="runBenchmarkBtn" disabled title="Load dataset and models first">⚡ Run Benchmark Locally</button>
         <button class="btn btn-sm btn-notebook" id="downloadNotebookBtn">📓 Jupyter Lab (.ipynb)</button>
       </div>
 
-      <!-- Dataset Card -->
+      <!-- 1. Target EEG Dataset Card (Starts EMPTY) -->
       <div class="side-card dataset-card">
         <div class="side-card-header">
           <h3>📊 Target EEG Dataset</h3>
-          <span class="tag-status">Auto-Harmonized</span>
+          <span class="tag-status" id="dsStatusTag">No Dataset Loaded</span>
         </div>
-        <div class="dataset-meta">
-          <div class="meta-row"><strong>Dataset:</strong> <span id="dsName">UK BCI Consortium (17 Subjects)</span></div>
-          <div class="meta-row"><strong>Task:</strong> Binary Motor Imagery (`rest` vs `move`)</div>
-          <div class="meta-row"><strong>Channels (8):</strong> F3, F4, C3, Cz, C4, P3, P4, Oz (250 Hz)</div>
+        
+        <!-- Empty State Container -->
+        <div class="empty-state-box" id="dsEmptyBox">
+          <p class="empty-text">No dataset loaded yet. Choose your local Kaggle data folder to inspect channels, subjects, and sampling rate.</p>
+          <div class="folder-select-row">
+            <input type="text" id="localFolderInput" class="folder-input" value="omnibci/data/kaggle_dataset" placeholder="Enter path to dataset folder..." />
+            <button class="btn btn-sm btn-primary" id="scanFolderBtn">📁 Select Local Folder</button>
+          </div>
+        </div>
+
+        <!-- Populated State Container (Hidden initially) -->
+        <div class="dataset-meta" id="dsLoadedMeta" style="display: none;">
+          <div class="meta-row"><strong>Dataset:</strong> <span id="dsName">UK BCI Consortium</span></div>
+          <div class="meta-row"><strong>Subjects:</strong> <span id="dsSubjects">17 Adult Volunteers (14 Train, 3 Test)</span></div>
+          <div class="meta-row"><strong>Channels:</strong> <span id="dsChannels">8 Electrodes (F3, F4, C3, Cz, C4, P3, P4, Oz) at 250 Hz</span></div>
+          <div class="meta-row"><strong>Total Trials:</strong> <span id="dsTrials">680 Epochs (4.0s duration)</span></div>
+          <div class="meta-row"><strong>Task:</strong> Binary Motor Intention (`rest` vs `move`)</div>
           <div class="meta-row folder-row">
-            <strong>Local Folder:</strong> 
-            <input type="text" id="localFolderInput" class="folder-input" value="omnibci/data/kaggle_dataset" title="Local dataset folder on your computer" />
+            <strong>Active Folder:</strong> <span class="path-badge" id="dsFolderPath">omnibci/data/kaggle_dataset</span>
           </div>
         </div>
       </div>
 
-      <!-- 3 Synthesized Scientific Models -->
+      <!-- 2. Synthesized Models Card (Starts EMPTY with Paper Upload Option) -->
       <div class="side-card models-card">
         <div class="side-card-header">
           <h3>📑 Synthesized Models (Limit: 3)</h3>
-          <span class="p2a-badge">Paper2Agent Verified</span>
+          <span class="p2a-badge" id="modelsCountBadge">0 / 3 Active</span>
         </div>
-        <p class="models-hint">Expand dropdowns to view why each fits, adaptation steps, and hybrid suggestions:</p>
-        
-        <div class="papers-list" id="papersList">
+
+        <!-- Empty State Container -->
+        <div class="empty-state-box" id="modelsEmptyBox">
+          <p class="empty-text">No models loaded. Ask OmniBCI in chat to find models for the Kaggle dataset, or upload a research paper / arXiv link below.</p>
+          <div class="model-action-row">
+            <button class="btn btn-sm btn-primary" id="findModelsQuickBtn">🔍 Search Models for Kaggle</button>
+            <button class="btn btn-sm btn-outline" id="uploadPaperBtn">📄 Upload Custom Paper</button>
+          </div>
+        </div>
+
+        <!-- Populated Papers List (Hidden initially) -->
+        <div class="papers-list" id="papersList" style="display: none;">
           <!-- Populated dynamically by app.js -->
         </div>
       </div>
 
-      <!-- Leaderboard & Submission Card -->
-      <div class="side-card results-card" id="resultsCard">
+      <!-- 3. Leaderboard Card (Hidden initially until benchmark run) -->
+      <div class="side-card results-card" id="resultsCard" style="display: none;">
         <div class="side-card-header">
-          <h3>🏆 Cross-Subject Benchmark</h3>
+          <h3>🏆 Cross-Subject Benchmark (17 Folds)</h3>
           <button class="btn btn-sm btn-download" id="downloadSubBtn">⬇ submission.csv</button>
         </div>
         <table class="bench-table">
@@ -132,28 +153,11 @@
               <th>Model</th>
               <th>Accuracy</th>
               <th>Kappa</th>
-              <th>FPR</th>
+              <th>Clinical Safety FPR</th>
             </tr>
           </thead>
           <tbody id="benchTableBody">
-            <tr class="top-row">
-              <td><strong>Riemannian EA</strong></td>
-              <td class="num-val">96.91%</td>
-              <td>0.938</td>
-              <td><span class="safe-pill">1.2%</span></td>
-            </tr>
-            <tr>
-              <td>EEGNet CNN</td>
-              <td class="num-val">87.21%</td>
-              <td>0.744</td>
-              <td><span class="warn-pill">11.2%</span></td>
-            </tr>
-            <tr>
-              <td>ShallowFBCSP</td>
-              <td class="num-val">87.21%</td>
-              <td>0.744</td>
-              <td><span class="warn-pill">11.2%</span></td>
-            </tr>
+            <!-- Populated dynamically after benchmark -->
           </tbody>
         </table>
       </div>
@@ -168,14 +172,43 @@
         <button class="modal-close" id="closeArxivBtn">&times;</button>
       </div>
       <div class="modal-body">
-        <p>Enter an arXiv ID or URL (e.g. <code>2106.11170</code> or <code>https://arxiv.org/abs/1805.07593</code>). Paper2Agent will extract its methods and synthesize an active MCP agent.</p>
-        <input type="text" id="arxivInput" placeholder="e.g. 1805.07593 or https://arxiv.org/abs/..." />
+        <p>Enter an arXiv ID or URL (e.g. <code>2106.11170</code> or <code>https://arxiv.org/abs/1805.07593</code>). Paper2Agent will synthesize an active MCP tool agent.</p>
+        <input type="text" id="arxivInput" placeholder="e.g. 2106.11170 or https://arxiv.org/abs/..." />
         <button class="btn btn-primary" id="submitArxivBtn">Synthesize Paper2Agent</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Engine Settings (Anthropic vs ScaDS.AI) -->
+  <!-- Modal: Custom Paper Upload Form -->
+  <div class="modal-overlay" id="paperUploadModal" style="display: none;">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>📄 Upload Custom Paper to Paper2Agent</h3>
+        <button class="modal-close" id="closePaperUploadBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-field">
+          <label>Paper Title:</label>
+          <input type="text" id="customPaperTitle" placeholder="e.g. Conformer Architecture for Motor Imagery" />
+        </div>
+        <div class="form-field">
+          <label>DOI / Citation:</label>
+          <input type="text" id="customPaperDoi" placeholder="e.g. 10.1109/TNSRE.2021.3123456" />
+        </div>
+        <div class="form-field">
+          <label>GitHub Code Repository URL:</label>
+          <input type="text" id="customPaperRepo" placeholder="e.g. https://github.com/username/eeg-conformer" />
+        </div>
+        <div class="form-field">
+          <label>Upload PDF Manuscript (Optional):</label>
+          <input type="file" id="modalPaperFileInput" accept=".pdf,.txt" />
+        </div>
+        <button class="btn btn-primary" id="submitCustomPaperBtn">Register into Paper2Agent</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Engine Settings (ScaDS.AI vs Anthropic) -->
   <div class="modal-overlay" id="settingsModal" style="display: none;">
     <div class="modal-box">
       <div class="modal-header">
@@ -183,20 +216,19 @@
         <button class="modal-close" id="closeSettingsBtn">&times;</button>
       </div>
       <div class="modal-body">
-        <p>Choose your AI chat backend:</p>
+        <p>Select your active conversational LLM engine:</p>
         <div class="radio-option">
-          <input type="radio" id="engineAnthropic" name="engine" value="anthropic" checked />
+          <input type="radio" id="engineScads" name="engine" value="scads" checked />
+          <label for="engineScads"><strong>ScaDS.AI Endpoint</strong> (Zero-Cost / Uncapped usage)</label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" id="engineAnthropic" name="engine" value="anthropic" />
           <label for="engineAnthropic"><strong>Anthropic Claude 3.5</strong> ($25 Hackathon credit)</label>
         </div>
-        <div class="radio-option">
-          <input type="radio" id="engineScads" name="engine" value="scads" />
-          <label for="engineScads"><strong>ScaDS.AI OpenAI-Compatible Endpoint</strong> (Uncapped usage)</label>
-        </div>
-        <div class="form-field" id="scadsField" style="display: none;">
-          <label>ScaDS.AI Base URL:</label>
-          <input type="text" id="scadsBaseUrl" placeholder="https://api.scads.ai/v1" />
-        </div>
-        <button class="btn btn-primary" id="saveEngineBtn">Save Engine Preferences</button>
+        <p style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem;">
+          Using <strong>ScaDS.AI</strong> ensures unlimited conversational queries about papers and datasets without consuming your $25 Anthropic credit.
+        </p>
+        <button class="btn btn-primary" id="saveEngineBtn">Save Engine Settings</button>
       </div>
     </div>
   </div>
