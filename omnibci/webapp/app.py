@@ -4,6 +4,7 @@ Zero-Cost Local Analysis, ScaDS.AI Chat Engine, Paper2Agent Synthesis, and Kaggl
 """
 
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
@@ -56,6 +57,14 @@ if ANTHROPIC_KEY:
         print(f"[OmniBCI] Anthropic client init failed: {e}")
 
 app = FastAPI(title="OmniBCI EEG Co-Pilot", version="2.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
 DEFAULT_DATA_DIR = os.path.join(os.path.dirname(__file__), "../data/kaggle_dataset")
@@ -674,4 +683,5 @@ app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)

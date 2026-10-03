@@ -2,6 +2,7 @@
 
 [![Hack-Nation Challenge 03](https://img.shields.io/badge/Hack--Nation-Challenge%2003%20Motor%20Intention%20Decoding-blue.svg)](https://hack-nation.com)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen.svg)](https://mattin89.github.io/OmniBCI/)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/mattin89/OmniBCI)
 [![Kaggle Benchmark](https://img.shields.io/badge/Kaggle-UK%20BCI%20Consortium%20(17%20Subjects)-20BEFF.svg)](https://www.kaggle.com/competitions/low-cost-motor-imagery-decoding-for-rehab-cross-subject)
 [![ScaDS.AI Llama-3.3-70B](https://img.shields.io/badge/ScaDS.AI-Llama--3.3--70B%20Inference-green.svg)](https://scads.ai)
 [![Paper2Agent Synthesis](https://img.shields.io/badge/Framework-Stanford%20Paper2Agent-cyan.svg)](https://github.com/jmiao24/Paper2Agent)
@@ -225,6 +226,29 @@ Open your browser at `http://127.0.0.1:8000`.
 3. Click the suggestion chip: *"Analyze Intertwined Model for Kaggle"*.
 4. Watch the pipeline discover the two transfer learning papers, update the model catalog, and display verbatim citations.
 5. Click **Run Benchmark Locally** to inspect the 17-subject leaderboard, view comparative charts, and follow the streaming execution in the embedded JupyterLab panel below.
+
+### Cloud Deployment on Render
+
+This repository includes a `render.yaml` blueprint specification and a containerized `Dockerfile`.
+
+#### Method A: 1-Click Blueprint
+1. Click the **Deploy to Render** badge at the top of this repository (or navigate to `https://render.com/deploy?repo=https://github.com/mattin89/OmniBCI`).
+2. Connect your GitHub account. Render automatically reads `render.yaml`.
+3. Input your private API keys (`SCADSAI_API_KEY`, `ANTHROPIC_API_KEY`). Render stores them in its encrypted vault; they are never exposed to clients or written to Git.
+4. Click **Apply**. Render installs dependencies from `requirements.txt` and publishes your live URL (`https://omnibci.onrender.com`).
+
+#### Method B: Manual Setup
+1. In the Render Dashboard, select **New +** $\rightarrow$ **Web Service**.
+2. Connect repository `mattin89/OmniBCI`.
+3. Set the following build and start parameters:
+   * **Runtime**: `Python`
+   * **Build Command**: `pip install -r requirements.txt`
+   * **Start Command**: `uvicorn omnibci.webapp.app:app --host 0.0.0.0 --port $PORT`
+4. Under **Environment Variables**, add:
+   * `PYTHON_VERSION`: `3.11.9`
+   * `SCADSAI_API_KEY`: *(Your private ScaDS.AI key)*
+   * `ANTHROPIC_API_KEY`: *(Optional Claude key)*
+5. Click **Deploy Web Service**.
 
 ---
 
