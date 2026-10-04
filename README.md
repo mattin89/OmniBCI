@@ -191,6 +191,8 @@ OmniBCI couples high-throughput open-weights inference with specialized scientif
 | **MNE-Python & SciPy Signal** | Neurophysiological signal conditioning | Executes 50 Hz IIR notch filtering, 4th-order zero-phase Butterworth bandpass filtering (1.0–45.0 Hz), epoch slicing, and channel-wise z-score standardization. |
 | **FastAPI & Uvicorn** | Asynchronous backend server | High-performance Python server delivering Server-Sent Events (SSE) for real-time token streaming and orchestration endpoints. |
 | **KaTeX** | Scientific mathematical typesetting | Renders inline and display mathematical formulas ($\bar{\mathbf{R}} = \frac{1}{N}\sum \mathbf{X}_i \mathbf{X}_i^T$) inside the web application in real time. |
+| **OpenAlex REST API** | Automated scholarly literature search | Queries over 250M cataloged works via `https://api.openalex.org` to harvest peer-reviewed BCI and motor imagery publications, extracting DOIs, author metadata, and open-access PDF links. |
+| **arXiv Export API** | Programmatic preprint discovery & ingestion | Interfaces with `http://export.arxiv.org/api/query` to ingest preprint metadata, abstracts, and code repository links by arXiv ID or topic. |
 | **Chart.js** | Interactive metric visualization | Renders responsive bar charts, fold distributions, and clinical safety scatter plots in the browser. |
 | **Playwright** | End-to-end browser automation | Executes headless integration testing and automated high-resolution UI verification. |
 | **ElevenLabs API** | Neural audio narration | Synthesizes broadcast-quality speech for automated video demonstrations (`elevenlabs_narration.py`). |
