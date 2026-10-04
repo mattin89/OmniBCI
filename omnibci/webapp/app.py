@@ -624,12 +624,12 @@ async def chat_copilot(req: ChatMessage):
             "*Both complementary models have now been added to your Synthesized Models panel above to enable cross-architecture transfer analysis.*\n\n"
             "#### 1. 17-Subject Cross-Validation Benchmark Comparison\n"
             "Evaluating the architectures across all 17 Leave-One-Subject-Out (LOSO) cross-validation folds yields:\n"
-            "• **🥇 Riemannian EA-TS** (He & Wu, 2019): **96.91% Mean Accuracy** ($\\kappa = 0.938$, $\\text{FPR} = 1.20\\%$ — **PASSED**)\n"
-            "• **🥈 EEGNet** (Lawhern et al., 2018): **87.21% Mean Accuracy** ($\\kappa = 0.744$, $\\text{FPR} = 8.50\\%$ — **PASSED**)\n"
-            "• **🥉 Intertwined Neural Network** (Duggento & De Lorenzo et al., 2022): **87.21% Mean Accuracy** ($\\kappa = 0.744$, $\\text{FPR} = 14.12\\%$)\n\n"
+            "• **🥇 Riemannian EA-TS** (He & Wu, 2019): **96.91% Mean Accuracy** ($\\kappa = 0.938$, $\\text{FPR} = 1.47\\%$ — **PASSED**)\n"
+            "• **🥈 Intertwined NN (Unaligned)** (Duggento & De Lorenzo et al., 2022): **90.15% Mean Accuracy** ($\\kappa = 0.803$, $\\text{FPR} = 13.80\\%$)\\n\"
+            "• **🥉 EEGNet** (Lawhern et al., 2018): **87.06% Mean Accuracy** ($\\kappa = 0.741$, $\\text{FPR} = 8.50\\%$ — **PASSED**)\\n\\n\"
             "#### 2. Mechanistic Root Cause Analysis\n"
             "The original Intertwined architecture was designed for within-subject decoding, where it achieved up to **99% subjectwise accuracy** (Duggento & De Lorenzo et al., 2022). "
-            "However, on the 8-channel cross-subject Kaggle benchmark, the unaligned baseline accuracy (**87.21%**) is lower than Riemannian EA-TS (**96.91%**). "
+            "However, on the 8-channel cross-subject Kaggle benchmark, the unaligned baseline accuracy (**90.15%**) is lower than Riemannian EA-TS (**96.91%**). "
             "In wearable BCIs, variations in skull impedance and electrode placement produce spatial rotations in the covariance manifold (He & Wu, 2019). "
             "Because the time-distributed fully connected (`tdFC`) layers directly project raw channel potentials, cross-subject domain shifts degrade spatial filter generalizability on atypical subjects (e.g. Sub-03 at 55.0% and Sub-11 at 50.0%).\n\n"
             "#### 3. Literature-Grounded Optimization Proposals\n"
@@ -1081,3 +1081,4 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
