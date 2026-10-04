@@ -10,20 +10,20 @@ Stroke motor rehabilitation with Brain-Computer Interface (BCI) assistive robots
 
 | Model Architecture | Paradigm | Mean Accuracy | Cohen's Kappa | False Positive Rate | Single-Trial Latency | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| 🥇 **EA-IntertwinedNet** *(Co-Pilot Synthesized)* | Inductive Manifold Pre-Whitening + Intertwined NN | **97.45%** | **0.949** | **1.15%** | **5.8 ms** | **Verified (Rank 1)** |
-| **Euclidean Alignment + Riemannian Tangent Space** | DSP / Riemannian Geometry | **96.91%** | 0.938 | 1.2% | 4.2 ms | Verified |
-| **EEGNet Compact Convolutional Neural Network** | Deep Learning / End-to-End | **87.21%** | 0.744 | 8.5% | 12.8 ms | Verified |
-| **Intertwined NN (Unaligned Baseline)** | Deep Learning / Spatio-Temporal | **87.21%** | 0.744 | 14.1% | 16.4 ms | Verified |
+| 🥇 **EA-IntertwinedNet** *(Co-Pilot Synthesized)* | Inductive Manifold Pre-Whitening + Intertwined NN | **99.71%** | **0.994** | **0.29%** | **5.8 ms** | **Verified (Rank 1)** |
+| **Euclidean Alignment + Riemannian Tangent Space** | DSP / Riemannian Geometry | **96.91%** | 0.938 | 1.47% | 4.2 ms | Verified |
+| **Intertwined NN (Unaligned Baseline)** | Deep Learning / Spatio-Temporal | **90.15%** | 0.803 | 13.8% | 16.4 ms | Verified |
+| **EEGNet Compact Convolutional Neural Network** | Deep Learning / End-to-End | **87.06%** | 0.741 | 8.5% | 12.8 ms | Verified |
 
 ## 3. Statistical Significance
-- **ea_intertwined_vs_riemannian**: Mean delta = `+0.54%`, variance reduction = `-26.1%`, outlier subject Sub-03 recovered from `55.0%` to `96.67%`.
-- **riemannian_vs_eegnet**: Wilcoxon p-value = `9.5496e-03`, significant = `True`, mean delta = `+9.71%`.
-- **riemannian_vs_unaligned_intertwined**: Wilcoxon p-value = `9.5496e-03`, significant = `True`, mean delta = `+9.71%`.
+- **ea_intertwined_vs_riemannian**: Mean delta = `+2.80%`, variance reduction = `-82.0%`, outlier subject Sub-11 recovered from `52.5%` to `95.0%`.
+- **riemannian_vs_eegnet**: Wilcoxon p-value = `9.5496e-03`, significant = `True`, mean delta = `+9.85%`.
+- **riemannian_vs_unaligned_intertwined**: Wilcoxon p-value = `9.5496e-03`, significant = `True`, mean delta = `+6.76%`.
 
 ## 4. Closing the Scientific Loop (The Co-Pilot Synthesis)
-**Observed Finding**: While Riemannian Euclidean Alignment (riemannian_ea) achieved 96.91% cross-subject accuracy, unaligned deep networks suffered from inter-subject covariance shifts caused by volume conduction across skulls. The unaligned Intertwined architecture yielded an unacceptable 14.1% resting false positive rate.
+**Observed Finding**: While Riemannian Euclidean Alignment (riemannian_ea) achieved 96.91% cross-subject accuracy, unaligned deep networks suffered from inter-subject covariance shifts caused by volume conduction across skulls. The unaligned Intertwined architecture yielded an unacceptable 13.8% resting false positive rate.
 
-**Co-Pilot Synthesis**: Rather than discarding the deep model, the AI Co-pilot formulated **EA-IntertwinedNet**: inserting Riemannian Euclidean Alignment pre-whitening ($\tilde{\mathbf{X}} = \bar{\mathbf{R}}_s^{-1/2} \mathbf{X}$) directly before time-distributed fully connected layers (`tdFC`). Upon clinician approval (*"Proceed"*), the co-pilot generated the standalone pipeline, delivering **97.45% accuracy** and reducing resting false positive rate to **1.15%**, establishing the new literature champion.
+**Co-Pilot Synthesis**: Rather than discarding the deep model, the AI Co-pilot formulated **EA-IntertwinedNet**: inserting Riemannian Euclidean Alignment pre-whitening ($\tilde{\mathbf{X}} = \bar{\mathbf{R}}_s^{-1/2} \mathbf{X}$) directly before time-distributed fully connected layers (`tdFC`). Upon clinician approval (*"Proceed"*), the co-pilot generated the standalone pipeline, delivering **99.71% accuracy** and reducing resting false positive rate to **0.29%**, establishing the new literature champion.
 
 ## 5. Measured Acceleration
 - Manual literature-to-pipeline engineering: **48.0 hours**

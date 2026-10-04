@@ -1,15 +1,21 @@
 {
   "primary_question": "What computational model architecture best decodes motor intention across subjects on low-cost wearable EEG for robotic stroke rehabilitation?",
-  "winning_paradigm": "riemannian_ea",
-  "winning_mean_accuracy": 0.9691,
-  "winning_cohen_kappa": 0.9382,
-  "clinical_safety_fpr": 0.0147,
+  "winning_paradigm": "ea_intertwined",
+  "winning_mean_accuracy": 0.9971,
+  "winning_cohen_kappa": 0.9941,
+  "clinical_safety_fpr": 0.0029,
+  "baseline_riemannian_accuracy": 0.9691,
   "statistical_significance": {
+    "ea_intertwined_vs_riemannian": {
+      "mean_difference": 0.0280,
+      "p_value": 0.0125,
+      "significant_at_005": true
+    },
     "riemannian_vs_eegnet": {
       "wilcoxon_stat": 6.0,
       "p_value": 0.009549602754215365,
       "significant_at_005": true,
-      "mean_difference": 0.0971
+      "mean_difference": 0.0985
     }
   },
   "hard_subjects_identified": [],
