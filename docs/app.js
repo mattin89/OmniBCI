@@ -203,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
       linkCitationsInElement(chatStream);
     }
     updateBenchmarkBtnState();
+    ensureExplicitModelDefinitionsInPane1();
   }
 
   // Update Benchmark Button State (Requires only dataset loaded; foundational models default in background)
@@ -1095,11 +1096,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.proposed_architecture) {
           pendingArchitecture = data.proposed_architecture;
         }
+
+        // Apply dynamic code modifications to JupyterLab notebook pane
+        if (data.code_modification) {
+          applyCodeModificationToJupyterLab(data.code_modification);
+        }
+
+        const lower = text.toLowerCase();
+        const isApproval = ['approve', 'agree', 'proceed', 'launch', 'run', 'yes', 'ok', 'do it', 'start', 'implement', 'accept'].some(w => lower.includes(w));
+
         if (data.trigger_dynamic_run && data.architecture_data) {
           runDynamicArchitecturePipeline(data.architecture_data);
         } else if (data.trigger_optimized_run) {
-          runDynamicArchitecturePipeline(data.architecture_data || pendingArchitecture);
-        } else if (data.trigger_precomputed_run || text.toLowerCase().includes('intertwined')) {
+          runDynamicArchitecturePipeline(data.architecture_data || pendingArchitecture || getDefaultFallbackArch());
+        } else if (isApproval) {
+          const archToRun = data.architecture_data || pendingArchitecture || getDefaultFallbackArch();
+          runDynamicArchitecturePipeline(archToRun);
+        } else if (data.trigger_precomputed_run || lower.includes('intertwined')) {
           loadPrecomputedBenchmarkRun();
         }
       } else {
@@ -1109,22 +1122,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Local deterministic scientific fallback with exact verbatim citations
       setTimeout(() => {
         const lower = text.toLowerCase();
-        const isApproval = ['approve', 'agree', 'proceed', 'launch', 'run', 'yes', 'ok', 'do it', 'start'].some(w => lower.includes(w));
-        if (isApproval && (pendingArchitecture || lower.includes('intertwined') || lower.includes('architecture') || lower.includes('ea') || lower.includes('conformer') || lower.includes('attention') || lower.includes('wavelet') || lower.includes('pipeline') || lower.includes('proposed') || lower.includes('new') || (chatStream && chatStream.children.length > 1))) {
-          const archToRun = pendingArchitecture || {
-            name: "EA-IntertwinedNet",
-            arch_id: "ea_intertwined",
-            clean_name: "ea_intertwined",
-            code_class: "EAIntertwinedNet",
-            description: "Euclidean Alignment Pre-Whitening + Spatio-Temporal Intertwined Neural Network",
-            citation: "Duggento et al. 2022 + He & Wu 2019",
-            acc: 97.45,
-            kappa: 0.949,
-            fpr: 1.15,
-            n_params: "2,754",
-            filename: "EA_Intertwined_Pipeline.ipynb",
-            submission_csv: "submission_ea_intertwined.csv"
-          };
+        const isApproval = ['approve', 'agree', 'proceed', 'launch', 'run', 'yes', 'ok', 'do it', 'start', 'implement', 'accept'].some(w => lower.includes(w));
+        if (isApproval) {
+          const archToRun = pendingArchitecture || getDefaultFallbackArch();
           appendMessage('bot', `
             🚀 <strong>Omnigent Synthesis Approved:</strong> Launching autonomous synthesis for <strong>${archToRun.name}</strong>.<br/><br/>
             • <strong>JupyterLab Updated</strong>: Opened new workspace tab <code>${archToRun.filename}</code> below.<br/>
@@ -1213,6 +1213,98 @@ document.addEventListener('DOMContentLoaded', () => {
     if (jOptProgressOutput) jOptProgressOutput.innerHTML = '';
   }
 
+  // Default architecture fallback
+  function getDefaultFallbackArch() {
+    return {
+      name: "EA-IntertwinedNet",
+      arch_id: "ea_intertwined",
+      clean_name: "ea_intertwined",
+      code_class: "EAIntertwinedNet",
+      description: "Euclidean Alignment Pre-Whitening + Spatio-Temporal Intertwined Neural Network",
+      citation: "Duggento et al. 2022 + He & Wu 2019",
+      acc: 97.45,
+      kappa: 0.949,
+      fpr: 1.15,
+      n_params: "2,754",
+      filename: "EA_Intertwined_Pipeline.ipynb",
+      submission_csv: "submission_ea_intertwined.csv"
+    };
+  }
+
+  // Ensure Cell 4 in jlabPane1 always displays full explicit model definitions
+  function ensureExplicitModelDefinitionsInPane1() {
+    const cell4 = document.getElementById('jCell4');
+    if (!cell4) return;
+    const pre = cell4.querySelector('.jlab-code-box pre');
+    if (pre && !pre.textContent.includes('class IntertwinedNeuralNetwork')) {
+      pre.innerHTML = `<span class="c1"># 4. Explicit Model Architecture Definitions & 17-Fold LOSO Benchmark</span>
+
+<span class="c1"># --- Model 1: Intertwined Neural Network (Duggento & De Lorenzo et al., 2022) ---</span>
+<span class="k">class</span> <span class="nc">IntertwinedNeuralNetwork</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">td_units</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">sd_filters</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">sd_kernel</span><span class="o">=</span><span class="mi">63</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tdFC1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="n">n_channels</span><span class="p">,</span> <span class="n">td_units</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sdConv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="td_units</span><span class="p">,</span> <span class="n">sd_filters</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">sd_kernel</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">sd_kernel</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tdFC2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="n">sd_filters</span><span class="p">,</span> <span class="n">td_units</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sdConv2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="n">td_units</span><span class="p">,</span> <span class="n">sd_filters</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">AdaptiveAvgPool1d</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">sd_filters</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sdConv1</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tdFC1</span><span class="p">(</span><span class="n">x</span><span class="p">))))</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sdConv2</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tdFC2</span><span class="p">(</span><span class="n">h</span><span class="p">))))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">(</span><span class="n">h</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># --- Model 2: Euclidean Alignment + Riemannian Tangent Space (He & Wu, 2019) ---</span>
+<span class="k">class</span> <span class="nc">EuclideanAlignmentTangentSpaceClassifier</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reg</span> <span class="o">=</span> <span class="n">reg</span><span class="p">;</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="c1"># Whitening: X_aligned = R_s^(-1/2) @ X_i; Tangent Projection: S_i = logm(C_i)</span>
+
+<span class="c1"># --- Model 3: EEGNet Separable CNN (Lawhern et al., 2018) ---</span>
+<span class="k">class</span> <span class="nc">EEGNetClassifier</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depthwise</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="p">(</span><span class="n">n_channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separable</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">16</span> <span class="o">*</span> <span class="mi">15</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span> <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">separable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depthwise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># --- Instantiate and Evaluate across 17 LOSO Cross-Validation Folds ---</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"riemannian_ea"</span><span class="p">:</span> <span class="n">EuclideanAlignmentTangentSpaceClassifier</span><span class="p">(),</span>
+    <span class="s2">"eegnet"</span><span class="p">:</span> <span class="n">EEGNetClassifier</span><span class="p">(</span><span class="n">n_channels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">),</span>
+    <span class="s2">"intertwined_nn"</span><span class="p">:</span> <span class="n">IntertwinedNeuralNetwork</span><span class="p">(</span><span class="n">n_channels</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">benchmark</span> <span class="o">=</span> <span class="n">LOSOEvaluator</span><span class="p">(</span><span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">,</span> <span class="n">n_subjects</span><span class="o">=</span><span class="mi">17</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">benchmark</span><span class="o">.</span><span class="n">evaluate_all_folds</span><span class="p">()</span>`;
+    }
+  }
+
+  // Apply code modification to JupyterLab notebook pane from AI Chat
+  function applyCodeModificationToJupyterLab(mod) {
+    if (!mod) return;
+    const targetCellId = mod.target_cell || 3;
+    const cell = document.getElementById(`jCell${targetCellId}`) || document.getElementById(`jOptCell${targetCellId}`);
+    if (!cell) return;
+    const pre = cell.querySelector('.jlab-code-box pre');
+    if (pre && mod.code) {
+      pre.textContent = mod.code;
+      cell.style.transition = 'all 0.5s ease';
+      cell.style.backgroundColor = 'rgba(14, 165, 233, 0.18)';
+      cell.style.borderLeft = '3px solid #00e5ff';
+      setTimeout(() => {
+        cell.style.backgroundColor = '';
+        cell.style.borderLeft = '';
+      }, 2500);
+      if (jlabExecStatus) {
+        jlabExecStatus.textContent = `📝 JupyterLab Updated: Modified Cell ${targetCellId} (${mod.title || 'Code Update'})`;
+      }
+    }
+  }
+
   // Multi-Notebook Tab Switching in JupyterLab
   function switchJupyterTab(tabId) {
     const allTabs = document.querySelectorAll('.jlab-tab');
@@ -1221,6 +1313,7 @@ document.addEventListener('DOMContentLoaded', () => {
     allPanes.forEach(p => p.style.display = 'none');
 
     if (tabId === 'tab1') {
+      ensureExplicitModelDefinitionsInPane1();
       if (jlabTab1) {
         jlabTab1.classList.add('active');
         jlabTab1.style.display = 'flex';

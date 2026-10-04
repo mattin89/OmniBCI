@@ -538,16 +538,19 @@ async def chat_copilot(req: ChatMessage):
             "dataset_info": SESSION_STATE["dataset_info"],
             "dataset_loaded": SESSION_STATE["dataset_loaded"],
             "trigger_precomputed_run": False,
-            "trigger_optimized_run": False
+            "trigger_optimized_run": False,
+            "code_modification": {
+                "target_cell": 3,
+                "title": mod_title,
+                "code": mod_code
+            }
         }
 
 
     # Priority 0: User Approval for Proposed Architecture ("Proceed", "approve", etc.)
     approval_keywords = ["proceed", "approve", "agree", "launch", "run", "yes", "ok", "do it", "start", "implement", "accept"]
     is_approval = any(w in user_lower for w in approval_keywords)
-    if is_approval and (
-        SESSION_STATE.get("pending_architecture") or "intertwined" in user_lower or "architecture" in user_lower or "pipeline" in user_lower or "ea" in user_lower or "conformer" in user_lower or "attention" in user_lower or "wavelet" in user_lower or "proposed" in user_lower or "new" in user_lower or len(SESSION_STATE["chat_history"]) >= 2
-    ):
+    if is_approval:
         arch_spec = SESSION_STATE.get("pending_architecture")
         if not arch_spec:
             if "conformer" in user_lower or "transformer" in user_lower:
@@ -892,6 +895,29 @@ async def api_get_notebook_code(filename: Optional[str] = "EEG_Motor_Decoding_Pi
     """
     code_text = get_active_notebook_code(filename)
     return {"status": "SUCCESS", "filename": filename, "code": code_text}
+
+@app.get("/api/get-notebook-cells")
+async def api_get_notebook_cells(filename: Optional[str] = "EEG_Motor_Decoding_Pipeline.ipynb"):
+    """
+    Returns code cells of active Jupyter notebook as structured JSON.
+    """
+    clean_name = os.path.basename(filename)
+    nb_path = os.path.join(SUBMISSION_DIR, clean_name)
+    if not os.path.exists(nb_path):
+        return {"status": "ERROR", "message": "Notebook not found", "cells": []}
+    try:
+        with open(nb_path, "r", encoding="utf-8") as f:
+            nb_data = json.load(f)
+        cells = []
+        for c in nb_data.get("cells", []):
+            if c.get("cell_type") == "code":
+                cells.append({
+                    "type": "code",
+                    "source": "".join(c.get("source", []))
+                })
+        return {"status": "SUCCESS", "filename": clean_name, "cells": cells}
+    except Exception as e:
+        return {"status": "ERROR", "message": str(e), "cells": []}
 
 @app.get("/api/download-notebook")
 async def download_notebook(folder: Optional[str] = None):
