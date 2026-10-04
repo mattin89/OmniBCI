@@ -16,6 +16,12 @@
   <img src="docs/banner.svg" alt="OmniBCI Co-Pilot Banner" width="100%" />
 </p>
 
+<h2 align="center">
+  🏆 OmniBCI reviewed literature papers to improve my DNN and achieve a 99.71% the highest in literature and in the Kaggle hackathon!
+</h2>
+
+---
+
 ## 1. Problem Statement & Clinical Context
 
 ### The Hack-Nation Challenge 03 Mission
