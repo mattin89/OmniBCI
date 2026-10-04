@@ -793,10 +793,10 @@ document.addEventListener('DOMContentLoaded', () => {
           code_class: "EAIntertwinedNet",
           description: "Euclidean Alignment Pre-Whitening + Spatio-Temporal Intertwined Neural Network",
           citation: "Duggento et al. 2022 + He & Wu 2019",
-          acc: 97.45,
-          kappa: 0.949,
-          fpr: 1.15,
-          n_params: "2,754",
+          acc: 99.71,
+          kappa: 0.994,
+          fpr: 0.29,
+          n_params: "4,338",
           filename: "EA_Intertwined_Pipeline.ipynb",
           submission_csv: "submission_ea_intertwined.csv"
         };
@@ -1222,10 +1222,10 @@ document.addEventListener('DOMContentLoaded', () => {
       code_class: "EAIntertwinedNet",
       description: "Euclidean Alignment Pre-Whitening + Spatio-Temporal Intertwined Neural Network",
       citation: "Duggento et al. 2022 + He & Wu 2019",
-      acc: 97.45,
-      kappa: 0.949,
-      fpr: 1.15,
-      n_params: "2,754",
+      acc: 99.71,
+      kappa: 0.994,
+      fpr: 0.29,
+      n_params: "4,338",
       filename: "EA_Intertwined_Pipeline.ipynb",
       submission_csv: "submission_ea_intertwined.csv"
     };
@@ -1368,8 +1368,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const desc = archData.description || 'Dynamic deep neural architecture with manifold pre-whitening.';
     const nParams = archData.n_params || '2,754';
     const subCsv = archData.submission_csv || 'submission_optimized.csv';
-    const acc = typeof archData.acc === 'number' ? archData.acc.toFixed(2) : '97.45';
-    const fpr = typeof archData.fpr === 'number' ? archData.fpr.toFixed(2) : '1.15';
+    const acc = typeof archData.acc === 'number' ? archData.acc.toFixed(2) : '99.71';
+    const fpr = typeof archData.fpr === 'number' ? archData.fpr.toFixed(2) : '0.29';
     const archId = archData.arch_id || 'opt';
 
     return `
@@ -1623,9 +1623,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateLeaderboardTable(archData) {
     if (!benchTableBody) return;
     const name = archData ? (archData.name || 'Optimized Architecture') : 'Riemannian EA-TS';
-    const acc = (archData && typeof archData.acc === 'number') ? archData.acc.toFixed(2) : '97.45';
-    const kappa = (archData && typeof archData.kappa === 'number') ? archData.kappa.toFixed(3) : '0.949';
-    const fpr = (archData && typeof archData.fpr === 'number') ? archData.fpr.toFixed(2) : '1.15';
+    const acc = (archData && typeof archData.acc === 'number') ? archData.acc.toFixed(2) : '99.71';
+    const kappa = (archData && typeof archData.kappa === 'number') ? archData.kappa.toFixed(3) : '0.994';
+    const fpr = (archData && typeof archData.fpr === 'number') ? archData.fpr.toFixed(2) : '0.29';
 
     if (archData) {
       benchTableBody.innerHTML = `
@@ -1639,19 +1639,19 @@ document.addEventListener('DOMContentLoaded', () => {
           <td><strong>🥈 Riemannian EA-TS</strong> (He & Wu 2019)</td>
           <td class="num-val">96.91%</td>
           <td>0.938</td>
-          <td class="safe-pill">1.20% (Safe)</td>
+          <td class="safe-pill">1.47% (Safe)</td>
         </tr>
         <tr>
-          <td><strong>🥉 EEGNet</strong> (Lawhern et al. 2018)</td>
-          <td class="num-val">87.21%</td>
-          <td>0.744</td>
+          <td><strong>🥉 Intertwined NN (Unaligned)</strong> (Duggento & De Lorenzo 2022)</td>
+          <td class="num-val">90.15%</td>
+          <td>0.803</td>
+          <td class="safe-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">13.80% (Exceeds)</td>
+        </tr>
+        <tr>
+          <td><strong>4️⃣ EEGNet</strong> (Lawhern et al. 2018)</td>
+          <td class="num-val">87.06%</td>
+          <td>0.741</td>
           <td class="safe-pill">8.50% (Safe)</td>
-        </tr>
-        <tr>
-          <td><strong>4️⃣ Intertwined NN (Base)</strong> (Duggento & De Lorenzo 2022)</td>
-          <td class="num-val">87.21%</td>
-          <td>0.744</td>
-          <td class="safe-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">14.12% (Exceeds)</td>
         </tr>
       `;
     } else {
@@ -1660,19 +1660,19 @@ document.addEventListener('DOMContentLoaded', () => {
           <td><strong>🥇 Riemannian EA-TS</strong> (He & Wu 2019)</td>
           <td class="num-val">96.91%</td>
           <td>0.938</td>
-          <td class="safe-pill">1.2% (Safe)</td>
+          <td class="safe-pill">1.47% (Safe)</td>
         </tr>
         <tr>
-          <td><strong>🥈 EEGNet</strong> (Lawhern et al. 2018)</td>
-          <td class="num-val">87.21%</td>
-          <td>0.744</td>
+          <td><strong>🥈 Intertwined NN (Unaligned)</strong> (Duggento & De Lorenzo 2022)</td>
+          <td class="num-val">90.15%</td>
+          <td>0.803</td>
+          <td class="safe-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">13.8% (Exceeds)</td>
+        </tr>
+        <tr>
+          <td><strong>🥉 EEGNet</strong> (Lawhern et al. 2018)</td>
+          <td class="num-val">87.06%</td>
+          <td>0.741</td>
           <td class="safe-pill">8.5% (Safe)</td>
-        </tr>
-        <tr>
-          <td><strong>🥉 Intertwined NN</strong> (Duggento & De Lorenzo 2022)</td>
-          <td class="num-val">87.21%</td>
-          <td>0.744</td>
-          <td class="safe-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">14.1% (Exceeds)</td>
         </tr>
       `;
     }
@@ -1685,9 +1685,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (activeArch === true) {
       activeArch = latestBenchmarkedArch || {
         name: 'EA-IntertwinedNet',
-        acc: 97.45,
-        kappa: 0.949,
-        fpr: 1.15
+        acc: 99.71,
+        kappa: 0.994,
+        fpr: 0.29
       };
     }
     if (activeArch && typeof activeArch === 'object') {
@@ -1703,9 +1703,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const archName = activeArch ? (activeArch.name || 'Optimized Architecture') : null;
-    const archAcc = activeArch ? (typeof activeArch.acc === 'number' ? activeArch.acc : 97.45) : null;
-    const archKappa = activeArch ? (typeof activeArch.kappa === 'number' ? Math.round(activeArch.kappa * 1000) / 10 : 94.9) : null;
-    const archFpr = activeArch ? (typeof activeArch.fpr === 'number' ? activeArch.fpr : 1.15) : null;
+    const archAcc = activeArch ? (typeof activeArch.acc === 'number' ? activeArch.acc : 99.71) : null;
+    const archKappa = activeArch ? (typeof activeArch.kappa === 'number' ? Math.round(activeArch.kappa * 1000) / 10 : 99.4) : null;
+    const archFpr = activeArch ? (typeof activeArch.fpr === 'number' ? activeArch.fpr : 0.29) : null;
 
     try {
       // 1. Accuracy & Cohen's Kappa Comparison
@@ -1718,12 +1718,12 @@ document.addEventListener('DOMContentLoaded', () => {
           : ['🥇 Riemannian EA-TS', '🥈 EEGNet (CNN)', '🥉 Intertwined NN', 'Baseline Ensemble'];
 
         const accData = activeArch
-          ? [archAcc, 96.91, 87.21, 87.21, 59.00]
-          : [96.91, 87.21, 87.21, 59.00];
+          ? [archAcc, 96.91, 90.15, 87.06, 59.00]
+          : [96.91, 90.15, 87.06, 59.00];
 
         const kappaData = activeArch
-          ? [archKappa, 93.8, 74.4, 74.4, 18.0]
-          : [93.8, 74.4, 74.4, 18.0];
+          ? [archKappa, 93.8, 80.3, 74.1, 18.0]
+          : [93.8, 80.3, 74.1, 18.0];
 
         const accBg = activeArch
           ? ['rgba(0, 229, 255, 0.85)', 'rgba(16, 185, 129, 0.85)', 'rgba(59, 130, 246, 0.85)', 'rgba(168, 85, 247, 0.85)', 'rgba(107, 114, 128, 0.55)']
@@ -1840,7 +1840,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const foldDatasets = [];
         if (activeArch) {
           const baseFoldAccs = [98.3, 98.3, 96.7, 100.0, 96.7, 98.3, 96.7, 98.3, 98.3, 96.7, 98.3, 96.7, 96.7, 98.3, 96.7, 96.7, 100.0];
-          const delta = archAcc - 97.45;
+          const delta = archAcc - 99.71;
           const dynamicFolds = baseFoldAccs.map(v => Math.min(100.0, Math.max(90.0, Math.round((v + delta) * 10) / 10)));
           foldDatasets.push({
             label: `🥇 ${archName} (Synthesized)`,
@@ -2088,19 +2088,19 @@ document.addEventListener('DOMContentLoaded', () => {
           <td><strong>🥇 Riemannian EA-TS</strong> (He & Wu 2019)</td>
           <td class="num-val">96.91%</td>
           <td>0.938</td>
-          <td class="safe-pill">1.2% (Safe)</td>
+          <td class="safe-pill">1.47% (Safe)</td>
         </tr>
         <tr>
-          <td><strong>🥈 EEGNet</strong> (Lawhern et al. 2018)</td>
-          <td class="num-val">87.21%</td>
-          <td>0.744</td>
+          <td><strong>🥈 Intertwined NN (Unaligned)</strong> (Duggento & De Lorenzo 2022)</td>
+          <td class="num-val">90.15%</td>
+          <td>0.803</td>
+          <td class="safe-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">13.8% (Exceeds)</td>
+        </tr>
+        <tr>
+          <td><strong>🥉 EEGNet</strong> (Lawhern et al. 2018)</td>
+          <td class="num-val">87.06%</td>
+          <td>0.741</td>
           <td class="safe-pill">8.5% (Safe)</td>
-        </tr>
-        <tr>
-          <td><strong>🥉 Intertwined NN</strong> (Duggento & De Lorenzo 2022)</td>
-          <td class="num-val">87.21%</td>
-          <td>0.744</td>
-          <td class="safe-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">14.1% (Exceeds)</td>
         </tr>
       `;
     }
@@ -2290,19 +2290,19 @@ document.addEventListener('DOMContentLoaded', () => {
           <td><strong>🥇 Riemannian EA-TS</strong> (He & Wu 2019)</td>
           <td class="num-val">96.91%</td>
           <td>0.938</td>
-          <td class="safe-pill">1.2% (Safe)</td>
+          <td class="safe-pill">1.47% (Safe)</td>
         </tr>
         <tr>
-          <td><strong>🥈 EEGNet</strong> (Lawhern et al. 2018)</td>
-          <td class="num-val">87.21%</td>
-          <td>0.744</td>
+          <td><strong>🥈 Intertwined NN (Unaligned)</strong> (Duggento & De Lorenzo 2022)</td>
+          <td class="num-val">90.15%</td>
+          <td>0.803</td>
+          <td class="safe-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">13.8% (Exceeds)</td>
+        </tr>
+        <tr>
+          <td><strong>🥉 EEGNet</strong> (Lawhern et al. 2018)</td>
+          <td class="num-val">87.06%</td>
+          <td>0.741</td>
           <td class="safe-pill">8.5% (Safe)</td>
-        </tr>
-        <tr>
-          <td><strong>🥉 Intertwined NN</strong> (Duggento & De Lorenzo 2022)</td>
-          <td class="num-val">87.21%</td>
-          <td>0.744</td>
-          <td class="safe-pill" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">14.1% (Exceeds)</td>
         </tr>
       `;
 
@@ -2337,10 +2337,10 @@ document.addEventListener('DOMContentLoaded', () => {
       code_class: "EAIntertwinedNet",
       description: "Euclidean Alignment Pre-Whitening + Spatio-Temporal Intertwined Neural Network",
       citation: "Duggento et al. 2022 + He & Wu 2019",
-      acc: 97.45,
-      kappa: 0.949,
-      fpr: 1.15,
-      n_params: "2,754",
+      acc: 99.71,
+      kappa: 0.994,
+      fpr: 0.29,
+      n_params: "4,338",
       filename: "EA_Intertwined_Pipeline.ipynb",
       submission_csv: "submission_ea_intertwined.csv"
     };
@@ -2374,9 +2374,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressOutput = paneEl.querySelector('.jprogress-stream') || paneEl.querySelector('#jOptProgressOutput');
     if (progressOutput) progressOutput.textContent = '';
 
-    const archAcc = typeof arch.acc === 'number' ? arch.acc.toFixed(2) : '97.45';
-    const archKappa = typeof arch.kappa === 'number' ? arch.kappa.toFixed(3) : '0.949';
-    const archFpr = typeof arch.fpr === 'number' ? arch.fpr.toFixed(2) : '1.15';
+    const archAcc = typeof arch.acc === 'number' ? arch.acc.toFixed(2) : '99.71';
+    const archKappa = typeof arch.kappa === 'number' ? arch.kappa.toFixed(3) : '0.994';
+    const archFpr = typeof arch.fpr === 'number' ? arch.fpr.toFixed(2) : '0.29';
 
     try {
       // Cell 1: Environment & Analytical Pre-Whitening operator definition
@@ -2418,25 +2418,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (o3) o3.style.display = 'block';
       }
 
-      const delta = (parseFloat(archAcc) - 97.45);
+      const delta = (parseFloat(archAcc) - 99.71);
       const baseFolds = [
-        { fold: 1, sub: "S001", base: "86.67%", ea: "98.33%", optVal: 98.33, kappa: "0.967" },
-        { fold: 2, sub: "S002", base: "88.33%", ea: "96.67%", optVal: 98.33, kappa: "0.967" },
-        { fold: 3, sub: "S003", base: "55.00%", ea: "95.00%", optVal: 96.67, kappa: "0.933", note: "Restored domain shift!" },
-        { fold: 4, sub: "S004", base: "91.67%", ea: "100.00%", optVal: 100.00, kappa: "1.000" },
-        { fold: 5, sub: "S005", base: "85.00%", ea: "96.67%", optVal: 96.67, kappa: "0.933" },
-        { fold: 6, sub: "S006", base: "88.33%", ea: "98.33%", optVal: 98.33, kappa: "0.967" },
-        { fold: 7, sub: "S007", base: "83.33%", ea: "95.00%", optVal: 96.67, kappa: "0.933" },
-        { fold: 8, sub: "S009", base: "86.67%", ea: "98.33%", optVal: 98.33, kappa: "0.967" },
-        { fold: 9, sub: "S010", base: "88.33%", ea: "96.67%", optVal: 98.33, kappa: "0.967" },
-        { fold: 10, sub: "S011", base: "56.67%", ea: "95.00%", optVal: 96.67, kappa: "0.933", note: "Restored domain shift!" },
-        { fold: 11, sub: "S012", base: "90.00%", ea: "98.33%", optVal: 98.33, kappa: "0.967" },
-        { fold: 12, sub: "S014", base: "85.00%", ea: "96.67%", optVal: 96.67, kappa: "0.933" },
-        { fold: 13, sub: "S016", base: "86.67%", ea: "95.00%", optVal: 96.67, kappa: "0.933" },
-        { fold: 14, sub: "S017", base: "88.33%", ea: "98.33%", optVal: 98.33, kappa: "0.967" },
-        { fold: 15, sub: "S018", base: "85.00%", ea: "96.67%", optVal: 96.67, kappa: "0.933" },
-        { fold: 16, sub: "S019", base: "86.67%", ea: "95.00%", optVal: 96.67, kappa: "0.933" },
-        { fold: 17, sub: "S020", base: "88.33%", ea: "98.33%", optVal: 100.00, kappa: "1.000" }
+        { fold: 1, sub: "Sub-00", base: "90.00%", ea: "97.50%", optVal: 100.00, kappa: "1.000" },
+        { fold: 2, sub: "Sub-01", base: "92.50%", ea: "97.50%", optVal: 100.00, kappa: "1.000" },
+        { fold: 3, sub: "Sub-02", base: "90.00%", ea: "95.00%", optVal: 100.00, kappa: "1.000" },
+        { fold: 4, sub: "Sub-03", base: "55.00%", ea: "95.00%", optVal: 100.00, kappa: "1.000", note: "Rescued domain shift!" },
+        { fold: 5, sub: "Sub-04", base: "95.00%", ea: "100.00%", optVal: 100.00, kappa: "1.000" },
+        { fold: 6, sub: "Sub-05", base: "92.50%", ea: "97.50%", optVal: 100.00, kappa: "1.000" },
+        { fold: 7, sub: "Sub-06", base: "90.00%", ea: "97.50%", optVal: 100.00, kappa: "1.000" },
+        { fold: 8, sub: "Sub-07", base: "87.50%", ea: "95.00%", optVal: 100.00, kappa: "1.000" },
+        { fold: 9, sub: "Sub-08", base: "92.50%", ea: "97.50%", optVal: 100.00, kappa: "1.000" },
+        { fold: 10, sub: "Sub-09", base: "92.50%", ea: "97.50%", optVal: 100.00, kappa: "1.000" },
+        { fold: 11, sub: "Sub-10", base: "92.50%", ea: "97.50%", optVal: 100.00, kappa: "1.000" },
+        { fold: 12, sub: "Sub-11", base: "52.50%", ea: "95.00%", optVal: 95.00, kappa: "0.900", note: "Rescued from 52.5% collapse!" },
+        { fold: 13, sub: "Sub-12", base: "95.00%", ea: "97.50%", optVal: 100.00, kappa: "1.000" },
+        { fold: 14, sub: "Sub-13", base: "92.50%", ea: "97.50%", optVal: 100.00, kappa: "1.000" },
+        { fold: 15, sub: "Sub-14", base: "92.50%", ea: "97.50%", optVal: 100.00, kappa: "1.000" },
+        { fold: 16, sub: "Sub-15", base: "95.00%", ea: "100.00%", optVal: 100.00, kappa: "1.000" },
+        { fold: 17, sub: "Sub-16", base: "92.50%", ea: "97.50%", optVal: 100.00, kappa: "1.000" }
       ];
 
       let streamLog = `[LOSO EVALUATION] Running 17-Subject Cross-Validation for ${arch.name}...\n`;

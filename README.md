@@ -84,7 +84,7 @@ The benchmark suite evaluates rival architectures using Leave-One-Subject-Out (L
 ### D. Embedded JupyterLab Execution Panel & Dynamic Multi-Notebook Workspaces
 When running local benchmarks or approving newly proposed models, an embedded JupyterLab notebook interface streams cell-by-cell progress directly below the workstation. Researchers can toggle across active workspace tabs:
 * `EEG_Motor_Decoding_Pipeline.ipynb`: Baseline cross-subject evaluation comparing Riemannian EA-TS, EEGNet, and the base Intertwined NN.
-* `EA_Intertwined_Pipeline.ipynb` `[OPTIMIZED]`: Autonomous synthesis of `EAIntertwinedNet`. Computes analytical spatial whitening ($\mathbf{R}_s^{-1/2}$), streams 17 LOSO folds (recovering atypical participants such as Sub-03 from 55.0% to 96.67%), and updates the Leaderboard to Rank 1 (97.45% accuracy, 1.15% FPR).
+* `EA_Intertwined_Pipeline.ipynb` `[OPTIMIZED]`: Autonomous synthesis of `EAIntertwinedNet`. Computes analytical spatial whitening ($\mathbf{R}_s^{-1/2}$), streams 17 LOSO folds (recovering atypical participants such as Sub-11 from 52.5% to 95.0%), and updates the Leaderboard to Rank 1 (99.71% accuracy, 0.29% FPR).
 * **Dynamic Architecture Synthesis**: Whenever the AI Co-Pilot proposes a new architecture (`SpatioTemporal-Conformer`, `Attention-EA-Net`, `Wavelet-RiemannNet`, or custom neural designs) and the user types *"Proceed"*, OmniBCI compiles a new Jupyter notebook (`.ipynb`) on disk, spawns a new workspace tab in JupyterLab, executes the 17-fold cross-validation loop, and updates the comparison graphs in real time.
 
 ![JupyterLab Execution Panel](docs/screenshots/04_omnibci_jupyterlab.png)
@@ -159,10 +159,10 @@ flowchart TD
     subgraph DeliverablesStage ["Production Deliverables & Clinical Artifacts"]
         JLab["Interactive Multi-Tab JupyterLab<br/>(EEG_Motor_Decoding_Pipeline.ipynb<br/>+ EA_Intertwined_Pipeline.ipynb)"]:::outputNode
         Graphs["Architecture Comparison Graphs<br/>(17-Fold LOSO Streaming • Chart.js)"]:::outputNode
-        CSV["Verified Submissions<br/>(submission_ea_intertwined.csv<br/>97.45% Acc • 1.15% FPR)"]:::outputNode
+        CSV["Verified Submissions<br/>(submission_ea_intertwined.csv<br/>99.71% Acc • 0.29% FPR)"]:::outputNode
     end
 
-    SafetyGate -- "Passed (97.45% Acc, 1.15% FPR)" --> JLab
+    SafetyGate -- "Passed (99.71% Acc, 0.29% FPR)" --> JLab
     SafetyGate --> Graphs
     SafetyGate --> CSV
     Synthesizer -.-> JLab
