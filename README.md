@@ -91,50 +91,46 @@ When running local benchmarks or approving newly proposed models, an embedded Ju
 OmniBCI adapts Stanford's **Paper2Agent** methodology within the **Databricks Omnigent** multi-agent orchestration harness. The system coordinates specialized agents to convert raw literature into production-grade scientific pipelines:
 
 ```mermaid
-flowchart TB
+flowchart TD
     %% Styling Classes with Vibrant Scientific Palette
-    classDef userNode fill:#0284c7,stroke:#38bdf8,stroke-width:2px,color:#ffffff,font-weight:bold;
-    classDef orchestratorNode fill:#0f172a,stroke:#00e5ff,stroke-width:2.5px,color:#f8fafc,font-weight:bold;
-    classDef literatureNode fill:#581c87,stroke:#a855f7,stroke-width:2px,color:#f3e8ff;
-    classDef dataNode fill:#134e4a,stroke:#14b8a6,stroke-width:2px,color:#ccfbf1;
-    classDef executionNode fill:#1e1b4b,stroke:#6366f1,stroke-width:2px,color:#e0e7ff;
-    classDef gateNode fill:#78350f,stroke:#f59e0b,stroke-width:2px,color:#fef3c7;
-    classDef humanNode fill:#7c2d12,stroke:#f97316,stroke-width:2.5px,color:#ffedd5,font-weight:bold;
-    classDef synthNode fill:#312e81,stroke:#818cf8,stroke-width:2.5px,color:#e0e7ff,font-weight:bold;
-    classDef outputNode fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#d1fae5,font-weight:bold;
+    classDef userNode fill:#0284c7,stroke:#38bdf8,stroke-width:2px,color:#ffffff
+    classDef orchestratorNode fill:#0f172a,stroke:#00e5ff,stroke-width:2px,color:#f8fafc
+    classDef literatureNode fill:#581c87,stroke:#a855f7,stroke-width:2px,color:#f3e8ff
+    classDef dataNode fill:#134e4a,stroke:#14b8a6,stroke-width:2px,color:#ccfbf1
+    classDef executionNode fill:#1e1b4b,stroke:#6366f1,stroke-width:2px,color:#e0e7ff
+    classDef gateNode fill:#78350f,stroke:#f59e0b,stroke-width:2px,color:#fef3c7
+    classDef humanNode fill:#7c2d12,stroke:#f97316,stroke-width:2px,color:#ffedd5
+    classDef synthNode fill:#312e81,stroke:#818cf8,stroke-width:2px,color:#e0e7ff
+    classDef outputNode fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#d1fae5
 
     %% 1. Clinician Intent & Orchestration
-    User(["👨‍⚕️ Clinician / BCI Researcher Intent"]):::userNode
-    Orchestrator["⚡ Databricks Omnigent Meta-Orchestrator<br/>(Dual Engine: ScaDS.AI Llama-3.3-70B • Anthropic Claude 3.5)"]:::orchestratorNode
+    User["Clinician / BCI Researcher Intent"]:::userNode
+    Orchestrator["Databricks Omnigent Meta-Orchestrator<br/>(Dual Engine: ScaDS.AI Llama-3.3-70B / Claude 3.5)"]:::orchestratorNode
     User --> Orchestrator
 
     %% 2. Symmetrical Ingestion Branches
-    subgraph IngestionStage ["📚 Balanced Discovery & Cohort Preprocessing Stage"]
-        direction LR
-        
-        subgraph LitBranch ["📖 Literature Harvester Track"]
-            Harvester["🔍 Literature Harvester Agent<br/>(OpenAlex & arXiv APIs)"]:::literatureNode
-            P2A["⚙️ Paper2Agent Synthesizer<br/>(Module Extraction & Tool Packaging)"]:::literatureNode
-            MCPCatalog[("📦 Active MCP Tools Catalog<br/>• Intertwined NN (arXiv:2208.08860)<br/>• Riemannian EA-TS (He & Wu 2019)<br/>• EEGNet (Lawhern et al. 2018)")]:::literatureNode
-            Harvester --> P2A --> MCPCatalog
-        end
-        
-        subgraph DataBranch ["📁 Local Kaggle Dataset Track"]
-            Scanner["📁 Local Dataset Scanner<br/>(Zero-Token Local File Inspection)"]:::dataNode
-            Harmonizer["🎛️ Live Preprocessing & Code Inspection<br/>(CAR • 50 Hz Notch • 8-30 Hz Bandpass)"]:::dataNode
-            CohortData[("📊 Harmonized Cohort Tensor<br/>• 17 Calibration Subjects (LOSO)<br/>• 3 Held-Out Test Subjects<br/>• 8-Channel Low-Cost Wearable Montage")]:::dataNode
-            Scanner --> Harmonizer --> CohortData
-        end
+    subgraph LitBranch ["Literature Discovery Track"]
+        Harvester["Literature Harvester Agent<br/>(OpenAlex & arXiv APIs)"]:::literatureNode
+        P2A["Paper2Agent Synthesizer<br/>(Module Extraction & Tool Packaging)"]:::literatureNode
+        MCPCatalog[("Active MCP Tools Catalog<br/>• Intertwined NN (arXiv:2208.08860)<br/>• Riemannian EA-TS (He & Wu 2019)<br/>• EEGNet (Lawhern et al. 2018)")]:::literatureNode
+        Harvester --> P2A --> MCPCatalog
     end
+
+    subgraph DataBranch ["Local Kaggle Dataset Track"]
+        Scanner["Local Dataset Scanner<br/>(Zero-Token Local File Inspection)"]:::dataNode
+        Harmonizer["Live Preprocessing & Code Inspection<br/>(CAR • 50 Hz Notch • 8-30 Hz Bandpass)"]:::dataNode
+        CohortData[("Harmonized Cohort Tensor<br/>• 17 Calibration Subjects (LOSO)<br/>• 3 Held-Out Test Subjects<br/>• 8-Channel Low-Cost Wearable Montage")]:::dataNode
+        Scanner --> Harmonizer --> CohortData
+    end
+
     Orchestrator --> Harvester
     Orchestrator --> Scanner
 
     %% 3. Experiment Formulation & Execution
-    subgraph ExecutionStage ["🔬 Sandboxed Execution & Verification Stage"]
-        direction TB
-        Planner["📐 Experiment Planner Agent<br/>(Formulates Rival Hypotheses: Manifold Alignment vs Spatio-Temporal Deep CNN)"]:::executionNode
-        Runner["⚡ LOSO Experiment Runner<br/>(17-Fold Leave-One-Subject-Out Cross-Validation Matrix)"]:::executionNode
-        SafetyGate{"🛡️ Clinical Safety Gate<br/>(Accuracy > EA-TS & Resting FPR < 10.0%?)"}:::gateNode
+    subgraph ExecutionStage ["Sandboxed Execution & Verification"]
+        Planner["Experiment Planner Agent<br/>(Rival Hypotheses: Manifold Alignment vs Deep CNN)"]:::executionNode
+        Runner["LOSO Experiment Runner<br/>(17-Fold Leave-One-Subject-Out Cross-Validation)"]:::executionNode
+        SafetyGate{"Clinical Safety Gate<br/>(Accuracy > EA-TS & Resting FPR < 10.0%?)"}:::gateNode
         
         MCPCatalog --> Runner
         CohortData --> Planner --> Runner
@@ -142,10 +138,10 @@ flowchart TB
     end
 
     %% 4. Root Cause Analysis & Dynamic Synthesis Loop
-    subgraph SynthesisStage ["🚀 Dynamic Synthesis & Human-in-the-Loop Decision Gate"]
-        Diagnostician["🧠 Root-Cause Diagnostician<br/>(Identifies Manifold Covariance Drift on Atypical Subjects)"]:::gateNode
-        HITL["🎯 Human-in-the-Loop Decision Gate<br/>('Proceed' Approval Prompt in Chat)"]:::humanNode
-        Synthesizer["🧬 Dynamic Architecture Synthesizer<br/>(EA-IntertwinedNet • Conformer • AttentionNet)"]:::synthNode
+    subgraph SynthesisStage ["Dynamic Synthesis & Human-in-the-Loop Gate"]
+        Diagnostician["Root-Cause Diagnostician<br/>(Identifies Manifold Covariance Drift)"]:::gateNode
+        HITL["Human-in-the-Loop Decision Gate<br/>('Proceed' Approval Prompt in Chat)"]:::humanNode
+        Synthesizer["Dynamic Architecture Synthesizer<br/>(EA-IntertwinedNet • Conformer • AttentionNet)"]:::synthNode
         
         SafetyGate -- "FPR > 10% / Domain Shift" --> Diagnostician
         Diagnostician --> HITL
@@ -154,15 +150,18 @@ flowchart TB
     end
 
     %% 5. Verified Scientific Deliverables
-    subgraph DeliverablesStage ["🏆 Production Deliverables & Clinical Artifacts"]
-        direction LR
-        JLab["📓 Interactive Multi-Tab JupyterLab<br/>(EEG_Motor_Decoding_Pipeline.ipynb<br/>+ EA_Intertwined_Pipeline.ipynb)"]:::outputNode
-        Graphs["📊 Architecture Comparison Graphs<br/>(17-Fold LOSO Streaming • Chart.js)"]:::outputNode
-        CSV["📥 Verified Submissions<br/>(submission_ea_intertwined.csv<br/>97.45% Acc • 1.15% FPR)"]:::outputNode
+    subgraph DeliverablesStage ["Production Deliverables & Clinical Artifacts"]
+        JLab["Interactive Multi-Tab JupyterLab<br/>(EEG_Motor_Decoding_Pipeline.ipynb<br/>+ EA_Intertwined_Pipeline.ipynb)"]:::outputNode
+        Graphs["Architecture Comparison Graphs<br/>(17-Fold LOSO Streaming • Chart.js)"]:::outputNode
+        CSV["Verified Submissions<br/>(submission_ea_intertwined.csv<br/>97.45% Acc • 1.15% FPR)"]:::outputNode
     end
 
-    SafetyGate -- "Passed (97.45% Acc, 1.15% FPR)" --> DeliverablesStage
-    Synthesizer -.-> DeliverablesStage
+    SafetyGate -- "Passed (97.45% Acc, 1.15% FPR)" --> JLab
+    SafetyGate --> Graphs
+    SafetyGate --> CSV
+    Synthesizer -.-> JLab
+    Synthesizer -.-> Graphs
+    Synthesizer -.-> CSV
 ```
 
 ### Specialist Agent Responsibilities:
