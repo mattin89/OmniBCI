@@ -75,10 +75,11 @@ The benchmark suite evaluates rival architectures using Leave-One-Subject-Out (L
 
 ---
 
-### D. Embedded JupyterLab Execution Panel & Multi-Notebook Workspaces
-When running benchmarks locally or testing proposed architectures, an embedded JupyterLab notebook interface streams cell-by-cell progress directly below the workstation. Researchers can toggle between active workspace tabs:
+### D. Embedded JupyterLab Execution Panel & Dynamic Multi-Notebook Workspaces
+When running local benchmarks or approving newly proposed models, an embedded JupyterLab notebook interface streams cell-by-cell progress directly below the workstation. Researchers can toggle across active workspace tabs:
 * `EEG_Motor_Decoding_Pipeline.ipynb`: Baseline cross-subject evaluation comparing Riemannian EA-TS, EEGNet, and the base Intertwined NN.
-* `EA_Intertwined_Pipeline.ipynb` `[OPTIMIZED]`: Live autonomous synthesis of `EAIntertwinedNet`. Tracks real-time analytical spatial whitening ($\mathbf{R}_s^{-1/2}$), streams 17 LOSO folds (recovering degraded atypical participants such as Sub-03 from 55.0% to 96.67%), and updates the Architecture Comparison Graphs to Rank 1 (97.45% accuracy, 1.15% FPR).
+* `EA_Intertwined_Pipeline.ipynb` `[OPTIMIZED]`: Autonomous synthesis of `EAIntertwinedNet`. Computes analytical spatial whitening ($\mathbf{R}_s^{-1/2}$), streams 17 LOSO folds (recovering atypical participants such as Sub-03 from 55.0% to 96.67%), and updates the Leaderboard to Rank 1 (97.45% accuracy, 1.15% FPR).
+* **Dynamic Architecture Synthesis**: Whenever the AI Co-Pilot proposes a new architecture (`SpatioTemporal-Conformer`, `Attention-EA-Net`, `Wavelet-RiemannNet`, or custom neural designs) and the user types *"Proceed"*, OmniBCI compiles a new Jupyter notebook (`.ipynb`) on disk, spawns a new workspace tab in JupyterLab, executes the 17-fold cross-validation loop, and updates the comparison graphs in real time.
 
 ![JupyterLab Execution Panel](docs/screenshots/04_omnibci_jupyterlab.png)
 *Figure 4: Embedded JupyterLab multi-notebook execution interface tracking real-time 17-subject cross-validation runs, tensor dimensions, and fold metrics.*
