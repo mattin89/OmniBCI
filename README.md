@@ -268,7 +268,12 @@ This repository contains all official competition artifacts for Hack-Nation Chal
    * **Product Demo (53s, Strictly < 1 min)**: [`omnibci/submission/demo_product_video.mp4`](omnibci/submission/demo_product_video.mp4) — End-to-end walkthrough showing how OmniBCI discovers datasets and models in minutes instead of months, ingesting custom models, diagnosing covariance shift, and executing the synthesized EA-IntertwinedNet reaching 99.71% accuracy ($\kappa = 0.994$, FPR = 0.29%).
    * **Technical Walkthrough (60s, Strictly ≤ 1 min)**: [`omnibci/submission/walkthrough_technical_video.mp4`](omnibci/submission/walkthrough_technical_video.mp4) — Architectural deep-dive through the Databricks Omnigent harness, arXiv/OpenAlex literature harvester, automated Stanford Paper2Agent MCP conversion, and 17-subject LOSO benchmark validation taking Rank 1 on Kaggle at 99.71% accuracy.
    * **Video Presentation Scripts**: [`omnibci/submission/video_scripts.md`](omnibci/submission/video_scripts.md) — Verbatim scripts, scene timestamps, and visual choreography.
-7. **Two-Minute Pitch Script**: [`omnibci/submission/demo_script_2min.md`](omnibci/submission/demo_script_2min.md)  
+7. **Three-Minute Pitch Deck & Presentation Suite (Mario De Lorenzo)**:
+   * **Compiled Multi-Page PDF**: [`omnibci/submission/pitch_slides.pdf`](omnibci/submission/pitch_slides.pdf) — Complete 9-slide deck in 1080p format.
+   * **Interactive Web Presentation Deck**: [`omnibci/submission/pitch_slides.html`](omnibci/submission/pitch_slides.html) (also accessible at [`docs/pitch.html`](docs/pitch.html)) — Standalone presentation webapp with keyboard shortcuts (`F` for fullscreen, `N` for notes, arrows for navigation) and integrated teleprompter.
+   * **Full Verbatim Script**: [`omnibci/submission/pitch_script_3min.md`](omnibci/submission/pitch_script_3min.md) — 180-second timed presenter script with visual cues and empirical citations.
+   * **High-Resolution PNG Slide Deck**: [`omnibci/submission/slides/`](omnibci/submission/slides/) — 9 standalone 1920×1080 PNG slides.
+8. **Two-Minute Pitch Script**: [`omnibci/submission/demo_script_2min.md`](omnibci/submission/demo_script_2min.md)  
    Concise presentation narrative outlining problem, architecture, results, and clinical impact.
 
 ---

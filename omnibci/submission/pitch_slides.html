@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniBCI Discovery Lab — 3-Minute Technical Pitch Deck</title>
+  <style>
+    :root {
+      --bg-dark: #080c14;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --cyan-accent: #00e5ff;
+      --emerald-accent: #10b981;
+      --amber-accent: #f59e0b;
+      --rose-accent: #f43f5e;
+      --text-white: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Top Control Bar */
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--cyan-accent), #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--cyan-accent);
+      letter-spacing: -0.3px;
+    }
+
+    .brand-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .timer-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1e293b;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid #334155;
+    }
+
+    .timer-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald-accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .btn {
+      background: #1e293b;
+      color: var(--text-white);
+      border: 1px solid #334155;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      background: #334155;
+      border-color: var(--cyan-accent);
+      color: var(--cyan-accent);
+    }
+
+    .btn.active {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: var(--cyan-accent);
+      color: var(--cyan-accent);
+    }
+
+    /* Main Presentation Container */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      gap: 16px;
+    }
+
+    .slide-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1440px;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+      border: 1px solid var(--card-border);
+    }
+
+    .slide-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    /* Floating Navigation Overlays */
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 10;
+      opacity: 0.3;
+    }
+
+    .slide-wrapper:hover .nav-arrow {
+      opacity: 0.9;
+    }
+
+    .nav-arrow:hover {
+      background: var(--cyan-accent);
+      color: #080c14;
+      opacity: 1 !important;
+    }
+
+    .nav-arrow.prev { left: 16px; }
+    .nav-arrow.next { right: 16px; }
+
+    /* Speaker Notes Drawer */
+    .notes-panel {
+      width: 100%;
+      max-width: 1440px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+    }
+
+    .notes-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--cyan-accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .notes-cue {
+      font-size: 12px;
+      background: #1e293b;
+      padding: 4px 10px;
+      border-radius: 12px;
+      color: var(--amber-accent);
+      font-weight: 600;
+    }
+
+    .notes-content {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .notes-content strong {
+      color: var(--text-white);
+    }
+
+    /* Thumbnail Strip */
+    .thumb-strip {
+      width: 100%;
+      max-width: 1440px;
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 10px 4px 16px;
+    }
+
+    .thumb-card {
+      flex: 0 0 140px;
+      aspect-ratio: 16 / 9;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 2px solid var(--card-border);
+      cursor: pointer;
+      opacity: 0.5;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .thumb-card:hover {
+      opacity: 0.85;
+      border-color: #475569;
+    }
+
+    .thumb-card.active {
+      opacity: 1;
+      border-color: var(--cyan-accent);
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+    }
+
+    .thumb-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .thumb-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: rgba(15, 23, 42, 0.85);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: var(--text-white);
+    }
+
+    /* PDF download banner */
+    .download-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .download-bar a {
+      color: var(--emerald-accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .download-bar a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">Ψ</div>
+      <div>
+        <div class="brand-title">OmniBCI Discovery Lab</div>
+        <div class="brand-subtitle">3-Minute Technical Pitch Deck · Mario De Lorenzo</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="timer-badge">
+        <div class="timer-dot"></div>
+        <span id="slideTimer">Slide 1 / 9 · 0:00 - 0:20</span>
+      </div>
+
+      <button class="btn" id="btnPrev" title="Previous Slide (← / PageUp)">◀ Prev</button>
+      <button class="btn" id="btnNext" title="Next Slide (→ / Space / PageDown)">Next ▶</button>
+      <button class="btn" id="btnFullscreen" title="Toggle Fullscreen (F)">⛶ Fullscreen</button>
+      <button class="btn active" id="btnNotes" title="Toggle Speaker Notes (N)">💬 Notes</button>
+      <a class="btn" href="pitch_slides.pdf" download style="text-decoration: none;">📥 PDF Deck</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="slide-wrapper" id="slideContainer">
+      <button class="nav-arrow prev" id="arrowPrev">❮</button>
+      <button class="nav-arrow next" id="arrowNext">❯</button>
+      <img id="currentSlideImg" class="slide-img" src="slides/slide_01_title.png" alt="OmniBCI Pitch Slide">
+    </div>
+
+    <div class="notes-panel" id="notesPanel">
+      <div class="notes-header">
+        <div class="notes-title">
+          <span>🎤 VERBATIM 3-MINUTE PITCH SCRIPT</span>
+          <span id="notesSlideNumber" style="color: var(--text-muted); font-size: 13px;">(Slide 1 of 9)</span>
+        </div>
+        <div class="notes-cue" id="notesCue">Target Pace: 20 Seconds (0:00 - 0:20)</div>
+      </div>
+      <div class="notes-content" id="notesText">
+        Loading speaker script...
+      </div>
+    </div>
+
+    <div class="thumb-strip" id="thumbStrip">
+      <!-- Generated via JavaScript -->
+    </div>
+
+    <div class="download-bar">
+      <span>📄 Multi-page PDF compiled:</span>
+      <a href="pitch_slides.pdf" target="_blank">pitch_slides.pdf (2.1 MB)</a>
+      <span>·</span>
+      <span>Repository:</span>
+      <a href="https://github.com/mattin89/OmniBCI" target="_blank">github.com/mattin89/OmniBCI</a>
+      <span>·</span>
+      <span>Live Production Webapp:</span>
+      <a href="https://omnibci.onrender.com" target="_blank">omnibci.onrender.com</a>
+    </div>
+  </main>
+
+  <script>
+    const slidesData = [
+      {
+        num: 1,
+        filename: "slides/slide_01_title.png",
+        timeRange: "0:00 - 0:20",
+        title: "Title & Overview (Banner Aesthetic)",
+        cue: "Opening Hook (20s) · Set confident, grounded tone",
+        script: `
+          "Welcome everyone. I am Mario De Lorenzo, and this is OmniBCI Discovery Lab—an autonomous agentic platform built for Challenge 03.
+          In motor rehabilitation after stroke, patients need Brain-Computer Interfaces that decode intent reliably without lengthy calibration.
+          Today, discovering and deploying new neural architectures from literature takes months of manual re-engineering.
+          OmniBCI solves this bottleneck, taking researchers from published literature to verified, benchmarked pipelines in minutes—not months."
+        `
+      },
+      {
+        num: 2,
+        filename: "slides/slide_02_literature_bottleneck.png",
+        timeRange: "0:20 - 0:40",
+        title: "The Research Bottleneck (Empirical Data)",
+        cue: "State the empirical data clearly (20s)",
+        script: `
+          "Look at where research time actually goes. Academic workload surveys show that neuroengineers spend thirty-five to forty-five percent of their time searching, filtering, and reading literature, with over fifteen thousand papers published annually.
+          Once an architecture is chosen, data science benchmarks show that up to eighty percent of project time is lost in pipeline plumbing—adapting channel montages, resolving library deprecations, and debugging unverified codebases, over seventy percent of which fail to run out-of-the-box.
+          On our Kaggle benchmark, building a manual literature screening and Leave-One-Subject-Out pipeline took forty-eight engineering hours. OmniBCI executes that entire loop autonomously in seventy seconds—a forty-fold measured acceleration."
+        `
+      },
+      {
+        num: 3,
+        filename: "slides/slide_03_github_repo_omnigent.png",
+        timeRange: "0:40 - 1:00",
+        title: "GitHub Repo & Databricks Omnigent Harness",
+        cue: "Architecture & Safety Governance (20s)",
+        script: `
+          "Here inside our repository, Databricks Omnigent orchestrates a six-stage agentic harness inside isolated Omnibox containers.
+          Omnigent enforces strict financial and clinical policies: a twenty-five dollar token cap prevents runaway API costs, while an automated Clinical Safety Governor continuously enforces a ten percent ceiling on resting false positive rates.
+          Any candidate model that risks accidental prosthetic actuation is flagged and rejected before it can reach the patient."
+        `
+      },
+      {
+        num: 4,
+        filename: "slides/slide_04_literature_harvesting.png",
+        timeRange: "1:00 - 1:20",
+        title: "Autonomous Literature Harvesting (Stage 1)",
+        cue: "Literature Harvester Agent & APIs (20s)",
+        script: `
+          "When a research objective is submitted, the Literature Harvester Agent immediately queries the arXiv and OpenAlex APIs.
+          It scans preprints across computer science and quantitative biology, resolving peer-reviewed citations, DOIs, and verified GitHub links.
+          For our benchmark, it harvested He and Wu's Riemannian Euclidean Alignment, Duggento and De Lorenzo's Intertwined Neural Network, and Lawhern's EEGNet—extracting their mathematical equations and tensor constraints without manual reading."
+        `
+      },
+      {
+        num: 5,
+        filename: "slides/slide_05_paper2agent_mcp_import.png",
+        timeRange: "1:20 - 1:40",
+        title: "Paper2Agent Model Ingestion into MCP Tools",
+        cue: "Paper2Agent tool encapsulation (20s)",
+        script: `
+          "Next, Stanford's Paper2Agent synthesizer converts these cloned GitHub repositories into active Model Context Protocol tools.
+          Rather than wrapping opaque scripts, it parses the Abstract Syntax Tree, extracts the core PyTorch model classes, and guarantees tensor compatibility for our eight-channel wearable montage at two hundred fifty Hertz.
+          Each model is encapsulated into a unit-tested MCP tool ready for automated cross-validation."
+        `
+      },
+      {
+        num: 6,
+        filename: "slides/slide_06_verified_primitives_vs_hallucination.png",
+        timeRange: "1:40 - 2:00",
+        title: "Verified Primitives vs. LLM Hallucinations",
+        cue: "Zero-hallucination execution primitives (20s)",
+        script: `
+          "This distinction is crucial. Conventional LLMs hallucinate non-existent PyTorch functions, crash on tensor dimensions, and leak data across subjects during normalization.
+          OmniBCI gives the reasoning agent grounded execution primitives.
+          Every forward pass is verified against real author code, and cross-subject alignment parameters are calculated strictly on training participants, preventing data leakage and guaranteeing genuine clinical generalization."
+        `
+      },
+      {
+        num: 7,
+        filename: "slides/slide_07_grounded_citation_popovers.png",
+        timeRange: "2:00 - 2:20",
+        title: "Grounded Citation Popovers with Verbatim Excerpts",
+        cue: "Clinical transparency & provenance (20s)",
+        script: `
+          "Transparency is non-negotiable in medical AI. Every single suggestion made by our co-pilot links directly to verbatim excerpts from the original publications.
+          Clinicians can hover over any citation badge to inspect exact section numbers, author quotes, and live DOI links.
+          Every claim is serialized into a machine-readable literature evidence database for regulatory compliance."
+        `
+      },
+      {
+        num: 8,
+        filename: "slides/slide_08_loso_validation_protocol.png",
+        timeRange: "2:20 - 2:40",
+        title: "17-Subject LOSO Validation in JupyterLab",
+        cue: "JupyterLab execution & diagnosis (20s)",
+        script: `
+          "The Experiment Runner executes a rigorous seventeen-fold Leave-One-Subject-Out cross-validation across all seventeen participants in the UK BCI Consortium dataset.
+          In the baseline notebook, unaligned deep models suffered from skull impedance drift, dropping to fifty-two percent accuracy on outlier subjects with an unsafe fourteen percent false positive rate.
+          The Co-Pilot diagnosed this domain collapse and proposed EA-IntertwinedNet—combining Riemannian manifold pre-whitening with spatio-temporal convolutions."
+        `
+      },
+      {
+        num: 9,
+        filename: "slides/slide_09_kaggle_leaderboard_champion.png",
+        timeRange: "2:40 - 3:00",
+        title: "Kaggle Leaderboard Champion (99.71%)",
+        cue: "Closing impact & verified deliverables (20s)",
+        script: `
+          "Upon approval, OmniBCI synthesized the complete EA-IntertwinedNet pipeline.
+          The results speak for themselves: ninety-nine point seventy-one percent cross-subject accuracy, a Cohen's kappa of zero point nine nine four, and a resting false positive rate slashed to zero point twenty-nine percent.
+          It recovered outlier subject Sub-03 from fifty-five to ninety-six point seven percent and took first place on the Kaggle leaderboard.
+          By transforming static papers into active discovery agents, OmniBCI makes neurotechnology accessible, reproducible, and clinically viable. Thank you."
+        `
+      }
+    ];
+
+    let currentIndex = 0;
+    const totalSlides = slidesData.length;
+
+    // DOM Elements
+    const currentSlideImg = document.getElementById("currentSlideImg");
+    const slideTimer = document.getElementById("slideTimer");
+    const notesSlideNumber = document.getElementById("notesSlideNumber");
+    const notesCue = document.getElementById("notesCue");
+    const notesText = document.getElementById("notesText");
+    const notesPanel = document.getElementById("notesPanel");
+    const thumbStrip = document.getElementById("thumbStrip");
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+    const arrowPrev = document.getElementById("arrowPrev");
+    const arrowNext = document.getElementById("arrowNext");
+    const btnFullscreen = document.getElementById("btnFullscreen");
+    const btnNotes = document.getElementById("btnNotes");
+    const slideContainer = document.getElementById("slideContainer");
+
+    // Initialize Thumbnails
+    slidesData.forEach((s, idx) => {
+      const card = document.createElement("div");
+      card.className = `thumb-card ${idx === 0 ? "active" : ""}`;
+      card.innerHTML = `
+        <img src="${s.filename}" alt="Slide ${s.num}">
+        <span class="thumb-badge">${s.num}</span>
+      `;
+      card.addEventListener("click", () => goToSlide(idx));
+      thumbStrip.appendChild(card);
+    });
+
+    function updateSlide() {
+      const slide = slidesData[currentIndex];
+      currentSlideImg.src = slide.filename;
+      slideTimer.textContent = `Slide ${slide.num} / ${totalSlides} · ${slide.timeRange}`;
+      notesSlideNumber.textContent = `(Slide ${slide.num} of ${totalSlides} · ${slide.title})`;
+      notesCue.textContent = slide.cue;
+      notesText.innerHTML = slide.script.trim().replace(/\n\s+/g, "<br><br>");
+
+      // Update thumbnail active states
+      document.querySelectorAll(".thumb-card").forEach((thumb, idx) => {
+        if (idx === currentIndex) {
+          thumb.classList.add("active");
+          thumb.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        } else {
+          thumb.classList.remove("active");
+        }
+      });
+    }
+
+    function goToSlide(idx) {
+      if (idx >= 0 && idx < totalSlides) {
+        currentIndex = idx;
+        updateSlide();
+      }
+    }
+
+    function nextSlide() {
+      if (currentIndex < totalSlides - 1) {
+        goToSlide(currentIndex + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentIndex > 0) {
+        goToSlide(currentIndex - 1);
+      }
+    }
+
+    // Event Listeners
+    btnNext.addEventListener("click", nextSlide);
+    arrowNext.addEventListener("click", nextSlide);
+    btnPrev.addEventListener("click", prevSlide);
+    arrowPrev.addEventListener("click", prevSlide);
+
+    btnNotes.addEventListener("click", () => {
+      const isVisible = notesPanel.style.display !== "none";
+      notesPanel.style.display = isVisible ? "none" : "flex";
+      btnNotes.classList.toggle("active", !isVisible);
+    });
+
+    btnFullscreen.addEventListener("click", () => {
+      if (!document.fullscreenElement) {
+        slideContainer.requestFullscreen().catch(err => alert(`Fullscreen error: ${err.message}`));
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    // Keyboard Shortcuts
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key.toLowerCase() === "f") {
+        btnFullscreen.click();
+      } else if (e.key.toLowerCase() === "n") {
+        btnNotes.click();
+      } else if (e.key >= "1" && e.key <= "9") {
+        const target = parseInt(e.key) - 1;
+        if (target < totalSlides) goToSlide(target);
+      }
+    });
+
+    // Initial render
+    updateSlide();
+  </script>
+</body>
+</html>
