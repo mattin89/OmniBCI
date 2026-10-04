@@ -1078,7 +1078,8 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({
           message: text,
           dataset_folder: targetFolder,
-          use_scads: useScads
+          use_scads: useScads,
+          active_notebook: (currentTabArchId === 'tab2' || (currentTabArchId && currentTabArchId.includes('intertwined'))) ? 'EA_Intertwined_Pipeline.ipynb' : 'EEG_Motor_Decoding_Pipeline.ipynb'
         })
       });
 
