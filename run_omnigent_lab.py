@@ -97,7 +97,7 @@ def run_omnibci_discovery_cycle(
         hypotheses=hypotheses,
         benchmark_results=benchmark_results,
         discovery_report=discovery_report,
-        output_path=os.path.join(output_dir, "research_report.md"),
+        output_path=os.path.join(output_dir, "research_report_run.md"),
         total_time=total_elapsed
     )
 

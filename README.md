@@ -164,15 +164,20 @@ flowchart TD
     Synthesizer -.-> CSV
 ```
 
-### Specialist Agent Responsibilities:
-1. **Literature Harvester (`literature_agent.py`)**: Searches peer-reviewed databases (OpenAlex and arXiv) for motor imagery implementations, extracting algorithmic structures, tensor constraints, and hyperparameter bounds.
-2. **Paper2Agent Synthesizer (`paper2agent_synthesizer.py`)**: Clones remote GitHub repositories, extracts model definition classes, resolves dependencies, and encapsulates them into standardized Model Context Protocol (MCP) tools.
-3. **Local Dataset Scanner & Preprocessor (`kaggle_loader.py`)**: Ingests Kaggle specification files, parses 8-channel montages (`Fz, C3, Cz, C4, PO7, Pz, PO8, Oz`) at 250 Hz, and prepares 17-fold Leave-One-Subject-Out (LOSO) cross-validation splits without expending API tokens.
-4. **Experiment Planner (`experiment_planner.py`)**: Formulates rival scientific hypotheses contrasting Riemannian geometric manifold alignment against end-to-end convolutional and spatio-temporal intertwined deep networks.
-5. **Sandbox Experiment Runner & Streaming Engine (`experiment_runner.py`)**: Manages isolated cross-validation across all 17 subjects, enforcing identical training/testing splits, logging fold-by-fold convergence, and streaming metrics into JupyterLab and Chart.js graphs.
-6. **Clinical Safety Governor (`safety_agent.py`)**: Monitors resting-state false positive rates (FPR), establishing an unyielding 10.0% safety ceiling to prevent unintended robotic exoskeleton actuations.
-7. **Scientific Diagnostician & Human-in-the-Loop Decision Gate (`app.py`)**: When unaligned baseline architectures degrade on atypical subjects due to volume conduction variance, the system pinpoints the mathematical root cause and seeks explicit user approval (*"Proceed"*) before deploying compute.
-8. **Dynamic Architecture Synthesizer (`notebook_generator.py`)**: Parameterizes inductive manifold centering ($\tilde{\mathbf{X}} = \bar{\mathbf{R}}_s^{-1/2}\mathbf{X}$) and compiles dynamic Jupyter notebooks on disk, generating new tabs and verified submission artifacts in real time.
+### Specialist Agent Decision Ownership Matrix (Databricks Omnigent Specification)
+
+As mandated by the Challenge Brief, every specialist agent owns a specific scientific decision, toolset, input contract, and handoff boundary:
+
+| Specialist Agent | Scientific Decision Owned | Primary Tools Used | Ingested Inputs | Produced Outputs & Handoff |
+| :--- | :--- | :--- | :--- | :--- |
+| **Literature Harvester** (`literature_agent.py`) | Which candidate BCI papers contain reproducible code for wearable motor decoding. | `search_openalex`, `fetch_arxiv`, `inspect_github_repo` | Clinician query, target domain constraints (8 channels, 250 Hz). | Structured literature manifest (`literature_evidence.json`), DOI metadata $\rightarrow$ `paper2agent_synthesizer`. |
+| **Paper2Agent Synthesizer** (`paper2agent_synthesizer.py`) | How to extract published architectures into standardized, executable tool primitives. | `analyze_repository`, `extract_mcp_tool`, `run_mcp_unit_test`, `register_mcp_catalog` | Remote GitHub codebases, mathematical descriptions. | Sandboxed Model Context Protocol (MCP) tool catalog (`omnibci/mcp_tools/`) $\rightarrow$ `experiment_planner`. |
+| **Dataset Scanner** (`kaggle_loader.py`) | How to harmonize local tabular/NPZ EEG recordings into normalized tensors without token cost. | `load_kaggle_csv`, `bandpass_filter_eeg`, `generate_loso_splits` | Local Kaggle dataset directory (`train.csv`, `test.csv`, `sub_*_raw.npz`). | Harmonized 17-subject LOSO data splits ($C=8, T=1000$ at 250 Hz) $\rightarrow$ `experiment_runner`. |
+| **Experiment Planner** (`experiment_planner.py`) | Which competing hypotheses maximize information gain within compute and API budgets. | `formulate_hypotheses`, `design_experiment_matrix`, `estimate_compute_budget` | Active MCP catalog, cohort dimensions, $25 Anthropic token budget. | Formal experimental matrix and competing hypotheses ($H_1, H_2, H_3$) $\rightarrow$ `safety_agent`. |
+| **Safety Governor** (`safety_agent.py`) | Whether proposed experiments and synthesized models satisfy clinical safety and cost policies. | `check_fpr_safety`, `check_latency_budget`, `request_human_approval` | Model telemetry, single-trial inference latency, resting FPR, token spend. | Go/No-Go governance verdict and Human-in-the-Loop approval requests $\rightarrow$ `experiment_runner`. |
+| **Experiment Runner** (`experiment_runner.py`) | Execution and validation of 17-fold cross-validation loops inside the sandbox. | `execute_loso_benchmark`, `export_kaggle_submission`, `log_trial_telemetry` | Approved experiment matrix, harmonized tensors, MCP model runners. | Fold-by-fold accuracy, Cohen's kappa, FPR, test prediction arrays $\rightarrow$ `analysis_agent`. |
+| **Analysis & Synthesis Agent** (`analysis_agent.py`) | Diagnosis of failure modes, statistical significance testing, and formulation of the next hypothesis. | `statistical_significance_test`, `diagnose_covariance_drift`, `synthesize_next_decision` | 17-fold benchmark telemetry from all competing models. | Formal discovery report (`discovery_report.json`), Wilcoxon p-values, next planned experiment. |
+| **Dynamic Architecture Synthesizer** (`notebook_generator.py`) | Compilation of executable JupyterLab notebooks parameterized by co-pilot discoveries. | `generate_dynamic_architecture_notebook`, `create_eeg_pipeline_notebook` | Diagnosed mathematical adjustments, PyTorch model definitions. | Verified `.ipynb` notebooks, standalone submission artifacts $\rightarrow$ JupyterLab UI. |
 
 ---
 
@@ -288,10 +293,13 @@ uv venv
 .venv\Scripts\activate   # On Windows (or source .venv/bin/activate on Linux/macOS)
 uv pip install -r requirements.txt
 
-# 3. Launch OmniBCI
+# 3. Option A: Launch Interactive Webapp Workstation
 python omnibci/webapp/app.py
+# -> Open http://127.0.0.1:8000 in your browser
+
+# 3. Option B: Run Headless Omnigent Multi-Agent Discovery Loop via CLI
+python run_omnigent_lab.py
 ```
-Open `http://127.0.0.1:8000` in your browser.
 
 ---
 
