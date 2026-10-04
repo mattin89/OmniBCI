@@ -88,46 +88,92 @@ When running local benchmarks or approving newly proposed models, an embedded Ju
 
 ## 3. Omnigent & Paper2Agent Architecture
 
-OmniBCI adapts Stanford's **Paper2Agent** methodology within the **Databricks Omnigent** multi-agent orchestration harness. The system coordinates seven specialized agents to convert raw literature into production-grade scientific pipelines:
+OmniBCI adapts Stanford's **Paper2Agent** methodology within the **Databricks Omnigent** multi-agent orchestration harness. The system coordinates specialized agents to convert raw literature into production-grade scientific pipelines:
 
 ```mermaid
-flowchart TD
-    User["Clinician / Researcher Prompt"] --> Orchestrator["Omnigent Meta-Harness<br/>(Session & Policy Governor)"]
-    
-    subgraph Omnigent_Pipeline ["OmniBCI Autonomous Multi-Agent Lab"]
-        Orchestrator --> Harvester["Literature Harvester Agent<br/>(arXiv / OpenAlex API)"]
-        Harvester --> P2A["Paper2Agent Tool Synthesizer<br/>(Code Extraction & MCP Packaging)"]
-        P2A --> MCPCatalog[("Active MCP Tools Catalog<br/>• Intertwined NN (arXiv:2208.08860)<br/>• Riemannian EA-TS (He & Wu 2019)<br/>• EEGNet (Lawhern et al. 2018)")]
+flowchart TB
+    %% Styling Classes with Vibrant Scientific Palette
+    classDef userNode fill:#0284c7,stroke:#38bdf8,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef orchestratorNode fill:#0f172a,stroke:#00e5ff,stroke-width:2.5px,color:#f8fafc,font-weight:bold;
+    classDef literatureNode fill:#581c87,stroke:#a855f7,stroke-width:2px,color:#f3e8ff;
+    classDef dataNode fill:#134e4a,stroke:#14b8a6,stroke-width:2px,color:#ccfbf1;
+    classDef executionNode fill:#1e1b4b,stroke:#6366f1,stroke-width:2px,color:#e0e7ff;
+    classDef gateNode fill:#78350f,stroke:#f59e0b,stroke-width:2px,color:#fef3c7;
+    classDef humanNode fill:#7c2d12,stroke:#f97316,stroke-width:2.5px,color:#ffedd5,font-weight:bold;
+    classDef synthNode fill:#312e81,stroke:#818cf8,stroke-width:2.5px,color:#e0e7ff,font-weight:bold;
+    classDef outputNode fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#d1fae5,font-weight:bold;
+
+    %% 1. Clinician Intent & Orchestration
+    User(["👨‍⚕️ Clinician / BCI Researcher Intent"]):::userNode
+    Orchestrator["⚡ Databricks Omnigent Meta-Orchestrator<br/>(Dual Engine: ScaDS.AI Llama-3.3-70B • Anthropic Claude 3.5)"]:::orchestratorNode
+    User --> Orchestrator
+
+    %% 2. Symmetrical Ingestion Branches
+    subgraph IngestionStage ["📚 Balanced Discovery & Cohort Preprocessing Stage"]
+        direction LR
         
-        Orchestrator --> Scanner["Local Dataset Scanner<br/>(Parses Kaggle LSL Specs, 0 Tokens)"]
-        Scanner --> Harmonizer["Signal Harmonizer<br/>(50 Hz Notch, 1-45 Hz Butterworth, Z-Score)"]
+        subgraph LitBranch ["📖 Literature Harvester Track"]
+            Harvester["🔍 Literature Harvester Agent<br/>(OpenAlex & arXiv APIs)"]:::literatureNode
+            P2A["⚙️ Paper2Agent Synthesizer<br/>(Module Extraction & Tool Packaging)"]:::literatureNode
+            MCPCatalog[("📦 Active MCP Tools Catalog<br/>• Intertwined NN (arXiv:2208.08860)<br/>• Riemannian EA-TS (He & Wu 2019)<br/>• EEGNet (Lawhern et al. 2018)")]:::literatureNode
+            Harvester --> P2A --> MCPCatalog
+        end
         
-        Harmonizer --> Planner["Experiment Planner<br/>(Formulates Rival Hypotheses)"]
-        MCPCatalog --> Runner["LOSO Experiment Runner<br/>(17-Subject Cross-Validation Sandbox)"]
-        Planner --> Runner
+        subgraph DataBranch ["📁 Local Kaggle Dataset Track"]
+            Scanner["📁 Local Dataset Scanner<br/>(Zero-Token Local File Inspection)"]:::dataNode
+            Harmonizer["🎛️ Live Preprocessing & Code Inspection<br/>(CAR • 50 Hz Notch • 8-30 Hz Bandpass)"]:::dataNode
+            CohortData[("📊 Harmonized Cohort Tensor<br/>• 17 Calibration Subjects (LOSO)<br/>• 3 Held-Out Test Subjects<br/>• 8-Channel Low-Cost Wearable Montage")]:::dataNode
+            Scanner --> Harmonizer --> CohortData
+        end
+    end
+    Orchestrator --> Harvester
+    Orchestrator --> Scanner
+
+    %% 3. Experiment Formulation & Execution
+    subgraph ExecutionStage ["🔬 Sandboxed Execution & Verification Stage"]
+        direction TB
+        Planner["📐 Experiment Planner Agent<br/>(Formulates Rival Hypotheses: Manifold Alignment vs Spatio-Temporal Deep CNN)"]:::executionNode
+        Runner["⚡ LOSO Experiment Runner<br/>(17-Fold Leave-One-Subject-Out Cross-Validation Matrix)"]:::executionNode
+        SafetyGate{"🛡️ Clinical Safety Gate<br/>(Accuracy > EA-TS & Resting FPR < 10.0%?)"}:::gateNode
         
-        Runner --> SafetyGate{"Clinical Safety Gate<br/>(Accuracy > EA-TS & FPR < 10%?)"}
-        
-        SafetyGate -- "Pass" --> Submitter["Submission Generator<br/>(submission.csv)"]
-        SafetyGate -- "Fail / Lower Accuracy" --> Diagnostician["Scientific Diagnostic Agent<br/>(Identifies Manifold Covariance Drift)"]
-        
-        Diagnostician --> Approval["Human-in-the-Loop Gate<br/>(Requires User Approval to Re-Synthesize)"]
-        Approval -- "Approved" --> Planner
+        MCPCatalog --> Runner
+        CohortData --> Planner --> Runner
+        Runner --> SafetyGate
     end
 
-    Submitter --> CSV["Kaggle submission.csv"]
-    Submitter --> Notebook["EEG_Motor_Decoding_Pipeline.ipynb"]
-    Submitter --> Report["discovery_report.json"]
+    %% 4. Root Cause Analysis & Dynamic Synthesis Loop
+    subgraph SynthesisStage ["🚀 Dynamic Synthesis & Human-in-the-Loop Decision Gate"]
+        Diagnostician["🧠 Root-Cause Diagnostician<br/>(Identifies Manifold Covariance Drift on Atypical Subjects)"]:::gateNode
+        HITL["🎯 Human-in-the-Loop Decision Gate<br/>('Proceed' Approval Prompt in Chat)"]:::humanNode
+        Synthesizer["🧬 Dynamic Architecture Synthesizer<br/>(EA-IntertwinedNet • Conformer • AttentionNet)"]:::synthNode
+        
+        SafetyGate -- "FPR > 10% / Domain Shift" --> Diagnostician
+        Diagnostician --> HITL
+        HITL -- "User Approves ('Proceed')" --> Synthesizer
+        Synthesizer --> Runner
+    end
+
+    %% 5. Verified Scientific Deliverables
+    subgraph DeliverablesStage ["🏆 Production Deliverables & Clinical Artifacts"]
+        direction LR
+        JLab["📓 Interactive Multi-Tab JupyterLab<br/>(EEG_Motor_Decoding_Pipeline.ipynb<br/>+ EA_Intertwined_Pipeline.ipynb)"]:::outputNode
+        Graphs["📊 Architecture Comparison Graphs<br/>(17-Fold LOSO Streaming • Chart.js)"]:::outputNode
+        CSV["📥 Verified Submissions<br/>(submission_ea_intertwined.csv<br/>97.45% Acc • 1.15% FPR)"]:::outputNode
+    end
+
+    SafetyGate -- "Passed (97.45% Acc, 1.15% FPR)" --> DeliverablesStage
+    Synthesizer -.-> DeliverablesStage
 ```
 
 ### Specialist Agent Responsibilities:
-1. **Literature Harvester (`literature_agent.py`)**: Searches scholarly indexes for open-source BCI implementations and extracts algorithmic descriptions, input tensor constraints, and hyperparameter bounds.
-2. **Paper2Agent Synthesizer (`paper2agent_synthesizer.py`)**: Clones remote GitHub repositories, extracts core network modules, resolves dependency conflicts, and packages models into standardized Model Context Protocol (MCP) tools.
-3. **Local Dataset Scanner (`kaggle_loader.py`)**: Inspects local folder structures, reads `SUBMISSION_DETAILS.txt` and `dataset_info.txt`, extracts channel montages (8 electrodes at 250 Hz), and prepares test splits without expending LLM tokens.
-4. **Experiment Planner (`experiment_planner.py`)**: Formulates rival scientific hypotheses contrasting geometric covariance alignment against deep spatial-temporal convolutions.
-5. **Sandbox Experiment Runner (`experiment_runner.py`)**: Manages sandboxed execution across all 17 subjects, enforcing identical train/test splits and computing single-trial inference latencies.
-6. **Clinical Safety Governor (`safety_agent.py`)**: Monitors the false positive rate during resting states. Flags any architecture exceeding the 10.0% safety ceiling.
-7. **Human-in-the-Loop Approval Gate**: When the ingested model (such as the Intertwined Neural Network) scores below the Riemannian benchmark, the agent does not trigger unbudgeted synthesis loops. It presents a root-cause diagnosis, formulates three concrete architectural adjustments, and waits for user confirmation.
+1. **Literature Harvester (`literature_agent.py`)**: Searches peer-reviewed databases (OpenAlex and arXiv) for motor imagery implementations, extracting algorithmic structures, tensor constraints, and hyperparameter bounds.
+2. **Paper2Agent Synthesizer (`paper2agent_synthesizer.py`)**: Clones remote GitHub repositories, extracts model definition classes, resolves dependencies, and encapsulates them into standardized Model Context Protocol (MCP) tools.
+3. **Local Dataset Scanner & Preprocessor (`kaggle_loader.py`)**: Ingests Kaggle specification files, parses 8-channel montages (`Fz, C3, Cz, C4, PO7, Pz, PO8, Oz`) at 250 Hz, and prepares 17-fold Leave-One-Subject-Out (LOSO) cross-validation splits without expending API tokens.
+4. **Experiment Planner (`experiment_planner.py`)**: Formulates rival scientific hypotheses contrasting Riemannian geometric manifold alignment against end-to-end convolutional and spatio-temporal intertwined deep networks.
+5. **Sandbox Experiment Runner & Streaming Engine (`experiment_runner.py`)**: Manages isolated cross-validation across all 17 subjects, enforcing identical training/testing splits, logging fold-by-fold convergence, and streaming metrics into JupyterLab and Chart.js graphs.
+6. **Clinical Safety Governor (`safety_agent.py`)**: Monitors resting-state false positive rates (FPR), establishing an unyielding 10.0% safety ceiling to prevent unintended robotic exoskeleton actuations.
+7. **Scientific Diagnostician & Human-in-the-Loop Decision Gate (`app.py`)**: When unaligned baseline architectures degrade on atypical subjects due to volume conduction variance, the system pinpoints the mathematical root cause and seeks explicit user approval (*"Proceed"*) before deploying compute.
+8. **Dynamic Architecture Synthesizer (`notebook_generator.py`)**: Parameterizes inductive manifold centering ($\tilde{\mathbf{X}} = \bar{\mathbf{R}}_s^{-1/2}\mathbf{X}$) and compiles dynamic Jupyter notebooks on disk, generating new tabs and verified submission artifacts in real time.
 
 ---
 
